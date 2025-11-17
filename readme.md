@@ -29,9 +29,9 @@ dexp/
 
 ---
 
-## MATLAB Usage
+## 1. Run codes in MATLAB
 
-### 1. MATLAB MEX Gateway (dexp/matlab-mex)
+### 1.1 MATLAB MEX Gateway (dexp/matlab-mex)
 
 To reproduce experiments in Figures 5(a), 7(a), and 8:
 
@@ -49,7 +49,7 @@ Available MEX utilities:
 - Matrix exponential: mex_sblas_expm, mex_pade_expm
 - Differential of expm: sblas_dexp, pade_dexp, dk_dexp
 
-### 2. MATLAB + Windows DLL (dexp/matlab-dll)
+### 1.2 MATLAB + Windows DLL (dexp/matlab-dll)
 
 To use the MATLAB-callable DLL:
 
@@ -63,7 +63,7 @@ To use the MATLAB-callable DLL:
 
 ---
 
-## Compiling the C++ Source Code
+## 2. Compiling the C++ Source Code
 
 Requirements: - g++ (C++17 or later) - Intel OneMKL (BLAS/LAPACK):
 https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html
@@ -78,7 +78,7 @@ To compile the main code:
 
 ---
 
-### Reproducing Paper Experiments
+### 2.1 Reproducing Paper Experiments
 
 Figure 3:
 Replace dexp/main.cpp with dexp/test/elapsed_test.cpp
