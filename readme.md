@@ -83,12 +83,20 @@ To compile the main code:
 ### 2.1 Reproducing Paper Experiments
 
 Figure 3:
-Replace dexp/main.cpp with dexp/test/elapsed_test.cpp
-Run: make
+Replace dexp/main.cpp with dexp/test/elapsed_test.cpp and Run make
+
+```bash
+cp dexp/test/elapsed_test.cpp dexp/main.cpp
+make
+```
 
 Figures 4–8:
 Same procedure:
-Replace dexp/main.cpp with dexp/test/error_test.cpp
-Run: make
+Replace dexp/main.cpp with dexp/test/error_test.cpp and Run make
+
+```bash
+cp dexp/test/error_test.cpp dexp/main.cpp
+make
+```
 
 ---
