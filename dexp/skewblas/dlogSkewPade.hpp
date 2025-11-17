@@ -1,6 +1,7 @@
 #pragma once
 
-#include "mkl.h"
+#include <fstream>
+
 #include "colMat.hpp"
 #include "skewSchFac.hpp"
 #include "pivotedLU.hpp"
@@ -79,9 +80,6 @@ public:
                                         A(VECT_TYPE(dim / 2)), R(MATX_TYPE(dim, dim)), X(MATX_TYPE(dim, dim)), Y(MATX_TYPE(dim, dim)), Work(MATX_TYPE(dim, dim + 1)) {};
     void copy(const SELF_TYPE &src)
     {
-        // assert(d == src.d);
-        s = src.s;
-        m = src.m;
         this->alpha = src.alpha;
         this->beta = src.beta;
         this->A.copy(src.A);
@@ -89,7 +87,9 @@ public:
         this->X.copy(src.X);
         this->Y.copy(src.Y);
     }
-    dlogSkewPadeApprox(const SELF_TYPE &src) : SELF_TYPE(src.d) { this->copy(src); };
+    dlogSkewPadeApprox(const SELF_TYPE &src) : s(src.s), d(src.d), m(src.m),
+                                               A(VECT_TYPE(src.d / 2)), R(MATX_TYPE(src.d, src.d)), X(MATX_TYPE(src.d, src.d)), Y(MATX_TYPE(src.d, src.d)),
+                                               Work(MATX_TYPE(src.d, src.d + 1)) { this->copy(src); };
     void swap(SELF_TYPE &src)
     {
         this->A.swap(src.A);
@@ -112,46 +112,58 @@ public:
     }
     ~dlogSkewPadeApprox() {};
 
+    void printMat(const char *name, const double *A, int row, int col)
+    {
+        FILE *f = fopen("debug.txt", "a"); // append mode
+        if (!f)
+            return;
+
+        fprintf(f, "%s = [\n", name);
+
+        for (int i = 0; i < row; ++i) // row index
+        {
+            for (int j = 0; j < col; ++j) // col index
+            {
+                fprintf(f, "% .15g ", A[i + j * row]); // column-major indexing
+            }
+            fprintf(f, ";\n");
+        }
+
+        fprintf(f, "]\n\n");
+        fclose(f);
+    };
+
+    void printVec(const char *name, const double *A, int n)
+    {
+        FILE *f = fopen("debug.txt", "a"); // append mode
+        if (!f)
+            return;
+
+        fprintf(f, "%s = [\n", name);
+
+        for (int j = 0; j < n; ++j) // col index
+        {
+            fprintf(f, "% .15g ", A[j]); // column-major indexing
+        }
+        fprintf(f, ";\n");
+
+        fprintf(f, "]\n\n");
+        fclose(f);
+    };
+
+    void printMsg(const char *str)
+    {
+        FILE *f = fopen("debug.txt", "a"); // append mode
+        if (!f)
+            return;
+
+        fprintf(f, "Dlog Setup: dim %d, pade order %d, scale order %d, %s.\n", d, m, s, str);
+        fclose(f);
+    };
+
     void Assign(REAL_TYPE *MatA, INTE_TYPE lda) { X.Assign(MatA, lda); };
     void Assign(const View_ColMat<REAL_TYPE> &ViewA) { Assign(ViewA.v, ViewA.ld); };
     void Assign(const ColMat<REAL_TYPE> &MatA) { Assign(MatA.v, MatA.r); };
-
-    // void _get_orders()
-    // {
-    //     REAL_TYPE norm = VecMatM[0]->Norm1();
-    //     if (norm < _EXPM_PADE_APPROX_BOUNDS[2])
-    //     {
-    //         m = 3;
-    //         _vmsize = 7;
-    //         s = 0;
-    //     }
-    //     else if (norm < _EXPM_PADE_APPROX_BOUNDS[4])
-    //     {
-    //         m = 5;
-    //         _vmsize = 8;
-    //         s = 0;
-    //     }
-    //     else if (norm < _EXPM_PADE_APPROX_BOUNDS[6])
-    //     {
-    //         m = 7;
-    //         _vmsize = 9;
-    //         s = 0;
-    //     }
-    //     else if (norm < _EXPM_PADE_APPROX_BOUNDS[8])
-    //     {
-    //         m = 9;
-    //         _vmsize = 10;
-    //         s = 0;
-    //     }
-    //     else
-    //     {
-    //         m = 13;
-    //         _vmsize = 13;
-    //         s = ceil(log2(norm / _EXPM_PADE_APPROX_BOUNDS[12]));
-    //         s = s < 0 ? 0 : s;
-    //     }
-    //     _vqsize = s + 1;
-    // };
 
     void _set_orders(INTE_TYPE order, INTE_TYPE scale)
     {
@@ -160,6 +172,333 @@ public:
         alpha = _LOGM_PADE_ALPHA[m - 1];
         beta = _LOGM_PADE_BETA[m - 1];
     };
+
+    // Lyapunov Solver:
+
+    // Rotation transpose R(-phi)
+    static inline void rotT(REAL_TYPE Rm[4], REAL_TYPE phi)
+    {
+        REAL_TYPE c = std::cos(phi);
+        REAL_TYPE s = std::sin(phi);
+        Rm[0] = c;
+        Rm[1] = s;
+        Rm[2] = -s;
+        Rm[3] = c;
+    }
+
+    // (R(phi)+I)^{-1} * b  (2×1)
+    static inline void solve_rot_plus_I_left(REAL_TYPE y[2],
+                                             const REAL_TYPE b[2],
+                                             REAL_TYPE phi)
+    {
+        REAL_TYPE c = std::cos(phi);
+        REAL_TYPE s = std::sin(phi);
+        REAL_TYPE den = 2 * (1 + c);
+
+        y[0] = ((1 + c) * b[0] + s * b[1]) / den;
+        y[1] = (-(s)*b[0] + (1 + c) * b[1]) / den;
+    }
+
+    // b * (R(phi)+I)^{-1}  (1×2)
+    static inline void solve_rot_plus_I_right(REAL_TYPE y[2],
+                                              const REAL_TYPE b[2],
+                                              REAL_TYPE phi)
+    {
+        REAL_TYPE c = std::cos(phi);
+        REAL_TYPE s = std::sin(phi);
+        REAL_TYPE den = 2 * (1 + c);
+
+        y[0] = ((1 + c) * b[0] - s * b[1]) / den;
+        y[1] = (s * b[0] + (1 + c) * b[1]) / den;
+    }
+
+    // 2×2 rotation–rotation symbolic formula:
+    // Solve R(phi_p) X + X R(phi_q) = B
+    static inline void solve_rot_rot_2x2(REAL_TYPE X[4],
+                                         const REAL_TYPE B[4],
+                                         REAL_TYPE phi_p,
+                                         REAL_TYPE phi_q)
+    {
+        REAL_TYPE cp = std::cos(phi_p), sp = std::sin(phi_p);
+        REAL_TYPE cq = std::cos(phi_q), sq = std::sin(phi_q);
+
+        REAL_TYPE Delta = cp + cq;
+        REAL_TYPE den = Delta * Delta + sp * sp + sq * sq; // = 2 + 2 cp cq
+
+        REAL_TYPE RTp[4], RTq[4];
+        rotT(RTp, phi_p);
+        rotT(RTq, phi_q);
+
+        REAL_TYPE BRtq[4], RtpB[4];
+
+        // B * R(-phi_q)
+        BRtq[0] = B[0] * RTq[0] + B[1] * RTq[2];
+        BRtq[1] = B[0] * RTq[1] + B[1] * RTq[3];
+        BRtq[2] = B[2] * RTq[0] + B[3] * RTq[2];
+        BRtq[3] = B[2] * RTq[1] + B[3] * RTq[3];
+
+        // R(-phi_p) * B
+        RtpB[0] = RTp[0] * B[0] + RTp[1] * B[2];
+        RtpB[1] = RTp[0] * B[1] + RTp[1] * B[3];
+        RtpB[2] = RTp[2] * B[0] + RTp[3] * B[2];
+        RtpB[3] = RTp[2] * B[1] + RTp[3] * B[3];
+
+        // Combine symbolic terms
+        X[0] = (Delta * B[0] + sp * BRtq[0] + sq * RtpB[0]) / den;
+        X[1] = (Delta * B[1] + sp * BRtq[1] + sq * RtpB[1]) / den;
+        X[2] = (Delta * B[2] + sp * BRtq[2] + sq * RtpB[2]) / den;
+        X[3] = (Delta * B[3] + sp * BRtq[3] + sq * RtpB[3]) / den;
+    }
+
+    // MAIN BLOCK-LYAP FUNCTION
+    // Solves A Y + Y A = X
+    // where A = diag(R(theta[0]),...,R(theta[m-1]), 1?) with n=2m or 2m+1.
+    void blk_lyap(REAL_TYPE *Y,
+                  const REAL_TYPE *X,
+                  const REAL_TYPE *theta)
+    {
+        INTE_TYPE n = d, nblocks = n / 2;
+        bool has_scalar = (n == 2 * nblocks + 1);
+        INTE_TYPE sidx = has_scalar ? (2 * nblocks) : -1;
+
+        // Zero Y
+        for (INTE_TYPE i = 0; i < n * n; i++)
+            Y[i] = 0.0;
+
+        // ================================
+        //  1) Rotation–Rotation blocks (2×2)
+        // ================================
+        for (INTE_TYPE p = 0; p < nblocks; p++)
+        {
+            INTE_TYPE rp0 = 2 * p;
+            INTE_TYPE rp1 = rp0 + 1;
+
+            for (INTE_TYPE q = 0; q < nblocks; q++)
+            {
+                INTE_TYPE cq0 = 2 * q;
+                INTE_TYPE cq1 = cq0 + 1;
+
+                REAL_TYPE B[4];
+                B[0] = X[rp0 + cq0 * n];
+                B[1] = X[rp0 + cq1 * n];
+                B[2] = X[rp1 + cq0 * n];
+                B[3] = X[rp1 + cq1 * n];
+
+                REAL_TYPE Z[4];
+                solve_rot_rot_2x2(Z, B, theta[p], theta[q]);
+
+                Y[rp0 + cq0 * n] = Z[0];
+                Y[rp0 + cq1 * n] = Z[1];
+                Y[rp1 + cq0 * n] = Z[2];
+                Y[rp1 + cq1 * n] = Z[3];
+            }
+        }
+
+        // ================================
+        // Scalar block exists only if n=2m+1
+        // ================================
+        if (has_scalar)
+        {
+            // ------------------------------
+            // 2) Rotation–Scalar (2×1)
+            // ------------------------------
+            for (INTE_TYPE p = 0; p < nblocks; p++)
+            {
+                INTE_TYPE rp0 = 2 * p;
+                INTE_TYPE rp1 = rp0 + 1;
+
+                REAL_TYPE b[2];
+                b[0] = X[rp0 + sidx * n];
+                b[1] = X[rp1 + sidx * n];
+
+                REAL_TYPE yv[2];
+                solve_rot_plus_I_left(yv, b, theta[p]);
+
+                Y[rp0 + sidx * n] = yv[0];
+                Y[rp1 + sidx * n] = yv[1];
+            }
+
+            // ------------------------------
+            // 3) Scalar–Rotation (1×2)
+            // ------------------------------
+            for (INTE_TYPE q = 0; q < nblocks; q++)
+            {
+                INTE_TYPE cq0 = 2 * q;
+                INTE_TYPE cq1 = cq0 + 1;
+
+                REAL_TYPE b[2];
+                b[0] = X[sidx + cq0 * n];
+                b[1] = X[sidx + cq1 * n];
+
+                REAL_TYPE yv[2];
+                solve_rot_plus_I_right(yv, b, theta[q]);
+
+                Y[sidx + cq0 * n] = yv[0];
+                Y[sidx + cq1 * n] = yv[1];
+            }
+
+            // ------------------------------
+            // 4) Scalar–Scalar (1×1)
+            // ------------------------------
+            REAL_TYPE bss = X[sidx + sidx * n];
+            Y[sidx + sidx * n] = 0.5 * bss;
+        }
+    }
+
+    // Inverse action
+
+    // ------------------------------------------------------------
+    // Compute 2x2 F = (I + beta*(R(phi)-I))^{-1} in closed form.
+    // R(phi) = [c -s; s c],  K = R - I,  I + beta*K = [a -b; b a]
+    // with a = 1 + beta(c-1), b = beta*s
+    // => F = 1/(a^2 + b^2) [ a  b; -b  a ]
+    // ------------------------------------------------------------
+    static inline void compute_F_block(REAL_TYPE F[4],
+                                       REAL_TYPE phi,
+                                       REAL_TYPE beta)
+    {
+        REAL_TYPE c = std::cos(phi);
+        REAL_TYPE s = std::sin(phi);
+
+        REAL_TYPE a = 1.0 + beta * (c - 1.0);
+        REAL_TYPE b = beta * s;
+        REAL_TYPE den = a * a + b * b;
+
+        REAL_TYPE inv = 1.0 / den;
+
+        F[0] = a * inv;  // (1,1)
+        F[1] = -b * inv; // (1,2)
+        F[2] = b * inv;  // (2,1)
+        F[3] = a * inv;  // (2,2)
+    }
+
+    // ------------------------------------------------------------
+    // blk_inv_action
+    //   L  <- sum_{j=0}^{p-1} alpha[j] * F_j * Es * F_j
+    // where F_j = (I + beta[j]*(S-I))^{-1}, and
+    //   S = diag(R(theta[0]), ..., R(theta[m-1]), 1?)
+    // n = 2*m  or  n = 2*m+1
+    // Es, L are n-by-n in column-major storage.
+    // ------------------------------------------------------------
+    void blk_inv_action(REAL_TYPE *L,
+                        const REAL_TYPE *Es,
+                        const REAL_TYPE *theta,
+                        const REAL_TYPE *alpha,
+                        const REAL_TYPE *beta)
+    {
+        INTE_TYPE n = d;
+        INTE_TYPE nblocks = d / 2; // number of 2x2 rotation blocks
+        const bool has_scalar = (n == 2 * nblocks + 1);
+        const INTE_TYPE sidx = has_scalar ? (2 * nblocks) : -1;
+
+        // Zero out L
+        for (INTE_TYPE i = 0; i < n * n; ++i)
+            L[i] = 0.0;
+
+        // Workspace: T will hold T = F_j * Es (n x n)
+        Work.Zero();
+        REAL_TYPE *T = Work.v; // Work is MATX_TYPE(d, d+1), enough for n*n
+
+        // Precompute all 2x2 blocks of F_j,i:
+        // F_{j,i} = (I + beta_j (S_i - I))^{-1}, where S_i = R(theta[i])
+        // Stored as column-major 2x2 blocks in Fblocks[(j*nblocks + i)*4 .. +3]
+        REAL_TYPE *Fblocks = new REAL_TYPE[m * nblocks * 4];
+
+        for (INTE_TYPE j = 0; j < m; ++j)
+        {
+            REAL_TYPE bet = beta[j];
+            for (INTE_TYPE i = 0; i < nblocks; ++i)
+            {
+                REAL_TYPE phi = theta[i]; // scaled angle for block i
+                REAL_TYPE *Fji = &Fblocks[(j * nblocks + i) * 4];
+                compute_F_block(Fji, phi, bet);
+            }
+        }
+
+        // printMat("F blocks (vec4)", Fblocks, 4, m * nblocks);
+
+        // Temporary buffer for right-multiplication (n x 2 panel)
+        REAL_TYPE *Ycol = new REAL_TYPE[n * 2];
+
+        // For each Padé node j:
+        for (INTE_TYPE j = 0; j < m; ++j)
+        {
+            const REAL_TYPE aj = alpha[j];
+
+            // ------------------------------------------------------
+            // 1) Left action: T = F_j * Es
+            //    F_j is block diagonal: each 2x2 block multiplies
+            //    the corresponding 2×n row panel of Es.
+            // ------------------------------------------------------
+            // First, handle all 2x2 rotation blocks (rows)
+            for (INTE_TYPE p = 0; p < nblocks; ++p)
+            {
+                INTE_TYPE r0 = 2 * p;
+                INTE_TYPE r1 = r0 + 1;
+
+                const REAL_TYPE *Fjp = &Fblocks[(j * nblocks + p) * 4]; // 2x2
+                const REAL_TYPE *Es_panel = &Es[r0];                    // rows r0:r1 of Es, all cols
+                REAL_TYPE *T_panel = &T[r0];                            // rows r0:r1 of T, all cols
+
+                // T_panel (2 x n) = Fjp (2 x 2) * Es_panel (2 x n, lda = n)
+                cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                            2, n, 2,
+                            1.0, Fjp, 2,
+                            Es_panel, n,
+                            0.0, T_panel, n);
+            }
+
+            // printMat("Left action (I + beta (K - I))^{-1} E_s", T, d, d);
+
+            // Scalar row (if present) is unchanged by F_j
+            if (has_scalar)
+            {
+                for (INTE_TYPE col = 0; col < n; ++col)
+                    T[sidx + col * n] = Es[sidx + col * n];
+            }
+
+            // ------------------------------------------------------
+            // 2) Right action: Y_j = T * F_j
+            //    Each 2x2 block multiplies the corresponding n×2
+            //    column panel of T. We accumulate aj * Y_j into L.
+            // ------------------------------------------------------
+            // Rotation–rotation column blocks
+            for (INTE_TYPE q = 0; q < nblocks; ++q)
+            {
+                INTE_TYPE c0 = 2 * q;
+                INTE_TYPE c1 = c0 + 1;
+
+                const REAL_TYPE *Fjq = &Fblocks[(j * nblocks + q) * 4]; // 2x2
+                const REAL_TYPE *T_colpanel = &T[c0 * n];               // n x 2
+                REAL_TYPE *Y_panel = Ycol;                              // n x 2
+
+                // Y_panel (n x 2) = T_colpanel (n x 2) * Fjq (2 x 2)
+                cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                            n, 2, 2,
+                            1.0, T_colpanel, n,
+                            Fjq, 2,
+                            0.0, Y_panel, n);
+
+                // Accumulate into L: L[:, c0:c1] += aj * Y_panel
+                for (INTE_TYPE row = 0; row < n; ++row)
+                {
+                    L[row + c0 * n] += aj * Y_panel[row + 0 * n];
+                    L[row + c1 * n] += aj * Y_panel[row + 1 * n];
+                }
+            }
+
+            // Scalar column (if present): F_j acts as 1 on it,
+            // so Y_j(:, sidx) = T(:, sidx)
+            if (has_scalar)
+            {
+                for (INTE_TYPE row = 0; row < n; ++row)
+                    L[row + sidx * n] += aj * T[row + sidx * n];
+            }
+        }
+
+        delete[] Ycol;
+        delete[] Fblocks;
+    }
 
     void _set_R(REAL_TYPE *MatQ, INTE_TYPE ldq) { R.Assign(MatQ, ldq); };
     void _set_A(REAL_TYPE *VecA) { A.Assign(VecA); };
@@ -172,173 +511,118 @@ public:
     void Parameter(const SkewSchurFactor &SSF) { this->Parameter(SSF.R.v, d, SSF.A.v); };
     void Parameter(ColMat<REAL_TYPE> &MatQ, ArrVec<REAL_TYPE> &VecA) { this->Parameter(MatQ.v, d, VecA.v); };
 
-    // void _solve_sylvester(INTE_TYPE scale_order)
-    // {
-    //     REAL_TYPE *TmpY = X.v, *TmpX = Y.v, *TmpLeft = Work.v;
-    //     REAL_TYPE *TmpRight = (d > 3) ? TmpLeft + 4 : TmpLeft;
-    //     INTE_TYPE blk_dim = A.d;
-    //     REAL_TYPE _scale = 0, _temp = 0;
-    //     for (auto col_ind = 0; col_ind < blk_dim; col_ind++)
-    //     {
-    //         TmpRight[0] = 1 + cos(A.v[col_ind] / pow(2, scale_order));
-    //         TmpRight[1] = sin(A.v[col_ind] / pow(2, scale_order));
-    //         TmpRight[2] = -TmpRight[1];
-    //         TmpRight[3] = TmpRight[0];
-
-    //         TmpY = X.v + (2 * col_ind) * d;
-
-    //         for (auto row_ind = 0; row_ind < blk_dim; row_ind++)
-    //         {
-    //             TmpLeft[0] = 1 + cos(A.v[row_ind] / pow(2, scale_order));
-    //             TmpLeft[1] = sin(A.v[row_ind] / pow(2, scale_order));
-    //             TmpLeft[2] = -TmpLeft[1];
-    //             TmpLeft[3] = TmpLeft[0];
-
-    //             TmpX[0] = TmpY[0];
-    //             TmpX[1] = TmpY[1];
-    //             TmpX[2] = TmpY[d];
-    //             TmpX[3] = TmpY[d + 1];
-
-    //             LAPACKE_dtrsyl(LAPACK_COL_MAJOR, 'N', 'N', 1, 2, 2, TmpLeft, 2, TmpRight, 2, TmpX, 2, &_scale);
-
-    //             TmpY[0] = TmpX[0] / _scale;
-    //             TmpY[1] = TmpX[1] / _scale;
-    //             TmpY[d] = TmpX[2] / _scale;
-    //             TmpY[d + 1] = TmpX[3] / _scale;
-
-    //             TmpY += 2;
-    //         }
-    //     }
-
-    //     if (2 * blk_dim != d)
-    //     {
-    //         for (auto ind = 0; ind < blk_dim; ind++)
-    //         {
-    //             _scale = tan(A.v[ind] / pow(2, s + 1)) * 0.5;
-    //             _temp = X(2 * ind, d - 1);
-    //             X(2 * ind, d - 1) = 0.5 * _temp - _scale * X(2 * ind + 1, d - 1);
-    //             X(2 * ind + 1, d - 1) = _scale * _temp + 0.5 * X(2 * ind + 1, d - 1);
-
-    //             _temp = X(d, 2 * ind);
-    //             X(d - 1, 2 * ind) = 0.5 * _temp + _scale * X(d - 1, 2 * ind + 1);
-    //             X(d - 1, 2 * ind + 1) = -_scale * _temp + 0.5 * X(d - 1, 2 * ind + 1);
-    //         }
-    //     }
-    // }
-
-    void _solve_sylvester(INTE_TYPE scale_order)
+    void Dlog(REAL_TYPE *MatE, INTE_TYPE ldm)
     {
-        REAL_TYPE *currX = X.v;
-        INTE_TYPE blk_dim = A.d;
-        REAL_TYPE _cos_i, _sin_i, _cos_j, _sin_j;
-        REAL_TYPE _ac, _bc, _ad, _bd;
-        REAL_TYPE _scale = 0, _temp = 0;
-        for (auto col_ind = 0; col_ind < blk_dim; col_ind++, currX = X.v + (2 * col_ind) * d)
-            for (auto row_ind = 0; row_ind < blk_dim; row_ind++, currX += 2)
-            {
-                // Wrong implementation
-                _cos_i = cos(A.v[row_ind]);
-                _sin_i = sin(A.v[row_ind]);
-                _cos_j = cos(A.v[col_ind]);
-                _sin_j = sin(A.v[col_ind]);
+        // MatE is the perturbation E in the original coordinates.
+        // Goal: Y.v will hold dlog(M)[E] in original coordinates at the end.
 
-                _scale = 0.5 / (_cos_i + _cos_j);
-                _ac = _scale * (1.0 + _cos_i * _cos_j);
-                _bc = _scale * (_sin_i * _cos_j);
-                _ad = _scale * (_cos_i * _sin_j);
-                _bd = _scale * (_sin_i * _sin_j);
+        // ---------------------------------------------------------
+        // 0. Move E into X and transform to Schur coordinates:
+        //    X := R^T * E * R
+        // ---------------------------------------------------------
+        Assign(MatE, ldm); // X := E  (column-major d×d)
 
-                Work.v[0] = currX[0];
-                Work.v[1] = currX[1];
-                Work.v[2] = currX[d];
-                Work.v[3] = currX[d + 1];
+        // printMat("R", R.v, d, d);
 
-                currX[0] = _ac * Work.v[0] + _bc * Work.v[1] - _ad * Work.v[2] - _bd * Work.v[3];
-                currX[1] = -_bc * Work.v[0] + _ac * Work.v[1] + _bd * Work.v[2] - _ad * Work.v[3];
-                currX[d] = _ad * Work.v[0] + _bd * Work.v[1] + _ac * Work.v[2] + _bc * Work.v[3];
-                currX[d + 1] = -_bd * Work.v[0] + _ad * Work.v[1] - _bc * Work.v[2] + _ac * Work.v[3];
-            }
+        // printVec("A", A.v, d / 2);
 
-        if (2 * blk_dim != d)
+        // printMat("E", X.v, d, d);
+
+        // Work := R^T * X
+        cblas_dgemm(CblasColMajor, CblasTrans, CblasNoTrans,
+                    d, d, d,
+                    1.0, R.v, d, X.v, d,
+                    0.0, Work.v, d);
+
+        // X := Work * R = R^T * E * R
+        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                    d, d, d,
+                    1.0, Work.v, d, R.v, d,
+                    0.0, X.v, d);
+
+        // Now X holds E_0 in the Schur frame.
+
+        // printMat("R'ER", X.v, d, d);
+
+        // ---------------------------------------------------------
+        // 1. Lyapunov chain for scaling:
+        //    For k = 1..s, solve A_k X_k + X_k A_k = X_{k-1}
+        //    where A_k = exp(D / 2^k) has angles phi_i = theta_i / 2^k.
+        // ---------------------------------------------------------
+        const INTE_TYPE nblocks = d / 2; // floor(d/2); for d odd, A.size() = d/2
+        VECT_TYPE theta_scaled(nblocks); // local scaled angles phi_i
+
+        if (s > 0)
         {
-            for (auto ind = 0; ind < blk_dim; ind++)
+            for (INTE_TYPE k = 1; k <= s; ++k)
             {
-                _scale = tan(A.v[ind] / pow(2, s + 1)) * 0.5;
-                _temp = X(2 * ind, d - 1);
-                X(2 * ind, d - 1) = 0.5 * _temp - _scale * X(2 * ind + 1, d - 1);
-                X(2 * ind + 1, d - 1) = _scale * _temp + 0.5 * X(2 * ind + 1, d - 1);
+                // phi_i = theta_i / 2^k
+                REAL_TYPE inv_scale = std::pow((REAL_TYPE)2.0, (REAL_TYPE)(-k));
+                for (INTE_TYPE i = 0; i < nblocks; ++i)
+                    theta_scaled[i] = A[i] * inv_scale;
 
-                _temp = X(d, 2 * ind);
-                X(d - 1, 2 * ind) = 0.5 * _temp + _scale * X(d - 1, 2 * ind + 1);
-                X(d - 1, 2 * ind + 1) = -_scale * _temp + 0.5 * X(d - 1, 2 * ind + 1);
+                // Y := X_k solves A_k Y + Y A_k = X  (X = X_{k-1}, Y = X_k)
+                blk_lyap(Y.v, X.v, theta_scaled.v);
+
+                // Move result back to X for the next iteration
+                // X <- Y
+                std::memcpy(X.v, Y.v, sizeof(REAL_TYPE) * d * d);
             }
         }
-    }
+        // After the loop (or if s==0), X holds E_s at S = exp(D / 2^s).
 
-    // void _solve_sylvester(INTE_TYPE scale_order)
-    // {
+        // printMat("E_s", X.v, d, d);
 
-    //     INTE_TYPE blk_dim = A.d;
-    //     REAL_TYPE _scale = 0, _temp = 0;
-
-    //     Y.Zero();
-    //     REAL_TYPE *diagY = Y.v;
-
-    //     for (auto ind = 0; ind < blk_dim; ind++, diagY += 2 + 2 * d)
-    //     {
-    //         diagY[0] = 1 + cos(A.v[ind] / pow(2, scale_order));
-    //         diagY[1] = sin(A.v[ind] / pow(2, scale_order));
-    //         diagY[d] = -diagY[1];
-    //         diagY[d + 1] = diagY[0];
-    //     }
-    //     if (d != 2 * blk_dim)
-    //         diagY[0] = 1;
-
-    //     LAPACKE_dtrsyl(LAPACK_COL_MAJOR, 'N', 'N', 1, d, d, Y.v, d, Y.v, d, X.v, d, &_scale);
-    //     cblas_dscal(d * d, 1.0 / _scale, X.v, 1);
-    // }
-
-    void _solve_system(REAL_TYPE _beta, REAL_TYPE *WorkL, REAL_TYPE *WorkV)
-    {
-        REAL_TYPE _cos, _a, _b;
-        memcpy(WorkL, X.v, sizeof(REAL_TYPE) * d * d);
-        for (auto ind = 0; ind < A.d; ind++)
+        // ---------------------------------------------------------
+        // 2. Padé inverse action at S:
+        //    L = sum_j alpha[j] (I + beta[j]K)^{-1} E_s (I + beta[j]K)^{-1}
+        //    where K = S - I and S has angles phi_i = theta_i / 2^s.
+        // ---------------------------------------------------------
         {
-            _cos = cos(A.v[ind] / pow(2, s));
-            _b = 2 * (_beta * _beta - 1) * (1 - _cos) + 1;
-            _a = (1 - _beta * (1 - _cos)) / _b;
-            _b = -_beta * sin(A.v[ind] / pow(2, s)) / _b;
+            REAL_TYPE inv_scale_s = (s > 0)
+                                        ? std::pow((REAL_TYPE)2.0, (REAL_TYPE)(-s))
+                                        : (REAL_TYPE)1.0;
 
-            cblas_dcopy(d, WorkL + 2 * ind, d, WorkV, 1);
-            cblas_daxpby(d, -_b, WorkL + 2 * ind + 1, d, _a, WorkL + 2 * ind, d);
-            cblas_daxpby(d, _b, WorkV, 1, _a, WorkL + 2 * ind + 1, d);
+            for (INTE_TYPE i = 0; i < nblocks; ++i)
+                theta_scaled[i] = A[i] * inv_scale_s;
 
-            cblas_dcopy(d, WorkL + (2 * ind) * d, 1, WorkV, 1);
-            cblas_daxpby(d, _b, WorkL + (2 * ind + 1) * d, 1, _a, WorkL + (2 * ind) * d, 1);
-            cblas_daxpby(d, -_b, WorkL + (2 * ind) * d, 1, _a, WorkL + (2 * ind + 1) * d, 1);
-        }
-    }
-
-    void Dlog(REAL_TYPE *MatM, INTE_TYPE ldm)
-    {
-        Assign(MatM, ldm);
-        cblas_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, d, d, d, 1.0, R.v, d, X.v, d, 0.0, Work.v, d);
-        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, d, d, d, 1.0, Work.v, d, R.v, d, 0.0, X.v, d);
-
-        for (auto ind = 0; ind < s; ind++)
-            _solve_sylvester(ind);
-
-        Y.Zero();
-        for (auto ind = 0; ind < m; ind++)
-        {
-            _solve_system(beta[ind], Work.v, Work.v + d * d);
-            cblas_daxpy(d * d, alpha[ind], Work.v, 1, Y.v, 1);
+            // Y := L_log(S)[E_s] via block Padé inverse action
+            blk_inv_action(Y.v, // output L
+                           X.v, // input E_s
+                           theta_scaled.v,
+                           alpha, beta);
         }
 
-        cblas_dscal(d * d, pow(2, s), Y.v, 1);
+        // printMat("L", Y.v, d, d);
 
-        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, d, d, d, 1.0, R.v, d, Y.v, d, 0.0, Work.v, d);
-        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans, d, d, d, 1.0, Work.v, d, R.v, d, 0.0, Y.v, d);
+        // ---------------------------------------------------------
+        // 3. Scale back: log(A) = 2^s log(S)  =>  dlog(A)[E] = 2^s L
+        // ---------------------------------------------------------
+        if (s > 0)
+        {
+            REAL_TYPE two_to_s = std::pow((REAL_TYPE)2.0, (REAL_TYPE)s);
+            cblas_dscal(d * d, two_to_s, Y.v, 1);
+        }
+
+        // printMat("2^s L", Y.v, d, d);
+
+        // ---------------------------------------------------------
+        // 4. Undo Schur transform: Y := R * Y * R^T
+        // ---------------------------------------------------------
+        // Work := R * Y
+        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                    d, d, d,
+                    1.0, R.v, d, Y.v, d,
+                    0.0, Work.v, d);
+
+        // Y := Work * R^T
+        cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans,
+                    d, d, d,
+                    1.0, Work.v, d, R.v, d,
+                    0.0, Y.v, d);
+
+        // printMat("2^s RLR'", Y.v, d, d);
+        // Now Y.v contains dlog(M)[E] in the original coordinates.
     }
 
     void Dlog(REAL_TYPE *MatN, INTE_TYPE ldn, REAL_TYPE *MatM, INTE_TYPE ldm)

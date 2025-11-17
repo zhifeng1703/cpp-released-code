@@ -71,4 +71,10 @@ function [fig_elapsed, fig_error] = expm_fig(dims, elapsed_times, errors, opts)
         exportgraphics(fig_error, fullfile(figpath, 'expm_error_matlab.pdf'), ...
             'ContentType','vector','BackgroundColor','none');
     end
+
+    if opts.savefig
+        fprintf('Saved figures to:\n  %s\n  %s\n', ...
+            fullfile(figpath,'expm_elapsed_matlab.pdf'), ...
+            fullfile(figpath,'expm_error_matlab.pdf'));
+    end
 end

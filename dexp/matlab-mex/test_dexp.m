@@ -1,9 +1,13 @@
-function [elapsed_forward, elapsed_inverse, fig_fwd, fig_inv] = test_dexp(dims, scale, opts)
+function test_dexp(dims, scale, opts)
 %TEST_DEXP  Timing experiment for forward and inverse differentials of expm.
 %
-%   [EFWD, EINV] = TEST_DEXP(dims, scale)
+%   TEST_EXPM(dims, scale, opts)
 %
-%   This routine benchmarks four implementations of the matrix exponential
+%   This routine performs a timing and accuracy experiment via calling
+%
+%   [ELAPSED_FWD, ELAPSED_INV, FIG_FWD, FIG_INV] = TEST_EXPM(dims, scale, opts)
+%
+%   which benchmarks four implementations of the matrix exponential
 %   differential Dexp_S(X), both in **forward** mode:
 %
 %        Y = Dexp_S(X)
@@ -27,7 +31,7 @@ function [elapsed_forward, elapsed_inverse, fig_fwd, fig_inv] = test_dexp(dims, 
 %
 %   INPUT
 %     dims    Vector of matrix sizes to test. Default: 3:50.
-%     scale   Scalar used to scale S by multiplication. Default: 1.
+%     scale   Scalar used to scale the matrix 2-norm of S. Default: 1.
 %
 %   OUTPUT
 %     elapsed_forward   (#dims × 4) matrix of mean execution times (seconds)
@@ -66,6 +70,26 @@ function [elapsed_forward, elapsed_inverse, fig_fwd, fig_inv] = test_dexp(dims, 
     if ~isfield(opts, 'savefig'), opts.savefig = true; end
     if ~isfield(opts, 'savefig'), opts.verbose = true; end
 
+    fprintf(['=============DEXP experiment begins=============\n\n']);
+
+    test_dexp_data(dims, scale, opts);
+    
+    fprintf(['=============DEXP experiment ends=============\n\n']);
+
+    fprintf(['IMPORTANT NOTE: The compute time of the first execution ' ...
+        'could be unreliable even WITH the warm-up run. \n']);
+    fprintf(['IMPORTANT NOTE: Make sure to run multiple calls to test_expm for ' ...
+        'more reliable timings.\n']);
+end
+
+function [elapsed_forward, elapsed_inverse, fig_fwd, fig_inv] = test_dexp_data(dims, scale, opts)
+
+    if nargin < 1, dims = 3:50; end
+    if nargin < 2, scale = 1; end
+    if nargin < 3, opts = struct('savefig', true, 'verbose', true); end 
+    
+    if ~isfield(opts, 'savefig'), opts.savefig = true; end
+    if ~isfield(opts, 'savefig'), opts.verbose = true; end
     % --- add src path ---
 
     addpath(fullfile(fileparts(mfilename('fullpath')), 'src'));
@@ -80,7 +104,7 @@ function [elapsed_forward, elapsed_inverse, fig_fwd, fig_inv] = test_dexp(dims, 
     %     loadlibrary(dll, hdr);
     % end
 
-    loop = 30;
+    loop = 50;
 
     elapsed_forward = zeros(length(dims), 4);
     elapsed_inverse = zeros(length(dims), 4);

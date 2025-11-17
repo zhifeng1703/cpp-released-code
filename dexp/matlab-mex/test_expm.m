@@ -1,9 +1,13 @@
-function [elapsed, errors, fig_elapsed, fig_error] = test_expm(dims, opts)
+function test_expm(dims, opts)
 %TEST_EXPM  Benchmark and accuracy comparison of four matrix exponential implementations.
 %
-%   ELAPSED_TIMES = TEST_EXPM(dims)
+%   TEST_EXPM(dims)
 %
-%   This routine performs a timing and accuracy experiment for the following
+%   This routine performs a timing and accuracy experiment via calling
+%
+%   [ELAPSED, ERRORS, FIG_ELAPSED, FIG_ERROR] = TEST_EXPM(dims, opts)
+%
+%   for the following
 %   exponential-map implementations on skew-symmetric matrices:
 %
 %       (1) sblas_expm      – Skew-Schur based formulae
@@ -51,30 +55,25 @@ function [elapsed, errors, fig_elapsed, fig_error] = test_expm(dims, opts)
 %       guarantees that at least one accurate sBLAS evaluation is captured.
 %
 %   See also: elap_err_expm, sblas_expm, pade_expm, expm.
+
     if nargin < 1, dims = 3:150; end
+    if nargin < 2, opts = struct(); end
+    if ~isfield(opts, 'verbose'), opts.verbose = true; end
+    if ~isfield(opts, 'savefig'), opts.savefig = true; end
 
-    root = fileparts(mfilename('fullpath'));
+    fprintf(['=============EXPM experiment begins=============\n\n']);
 
-    addpath(fullfile(root, 'src'));
-    compile_mex();
+    test_expm_data(dims, opts);
+    
+    fprintf(['=============EXPM experiment ends=============\n\n']);
 
-    % --- Add source folder to MATLAB path ---
-    % srcPath = fullfile(fileparts(mfilename('fullpath')), 'src');
-    % addpath(srcPath);
-    % 
-    % % --- Load DLL if not already loaded ---
-    % libPath = fullfile(fileparts(mfilename('fullpath')), 'lib');
-    % dll = fullfile(libPath, 'skewblas.dll');
-    % hdr = fullfile(libPath, 'skewblas_api.h');
-    % 
-    % if ~libisloaded('skewblas')
-    %     fprintf('Loading library from %s\n', libPath);
-    %     loadlibrary(dll, hdr);
-    % else
-    %     fprintf('Library already loaded.\n');
-    % end
+    fprintf(['IMPORTANT NOTE: The compute time of the first execution ' ...
+        'could be unreliable even WITH the warm-up run. \n']);
+    fprintf(['IMPORTANT NOTE: Make sure to run multiple calls to test_expm for ' ...
+        'more reliable timings.\n']);
+end
 
-
+function [elapsed, errors, fig_elapsed, fig_error] = test_expm_data(dims, opts)
     if nargin < 1, dims = 3:150; end
     if nargin < 2, opts = struct(); end
     if ~isfield(opts, 'verbose'), opts.verbose = true; end

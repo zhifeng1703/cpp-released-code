@@ -14,12 +14,15 @@ function build_mex
     % Common MEX options
     % --------------------------
     mex_opts = {
-        '-v'
+        % '-v'
         '-R2017b'
         '-DMATLAB_MEX_BUILD'
         ['-I' root_src]
         '-lmwblas'
         '-lmwlapack'
+        'CXXFLAGS="$CXXFLAGS -w -Qunused-arguments"'
+        'CFLAGS="$CFLAGS -w -Qunused-arguments"'
+        'LDFLAGS="$LDFLAGS -w"'
         '-outdir' 
         root_mex
     };
