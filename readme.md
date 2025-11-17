@@ -10,10 +10,18 @@ This repository contains the C++ source code, MATLAB interfaces, and experiment 
 ## Folder Structure
 
 dexp/
-skewblas/ C++ source code: Schur blocks, expm, dexp, DK formulas, utilities.
-test/ C++ experiment drivers (Figures 3–8).
-matlab-mex/ MATLAB MEX gateway to the C++ utilities.
-matlab-dll/ MATLAB callable C++ dynamic library for Windows.
+│
+├── main.cpp # C++ executable driver; basics.hpp, basics.cpp # Basic experiment utilities
+│
+├── skewblas/ # C++ source code: Schur blocks, expm, dexp, DK formulas, etc.
+│
+├── test/ # C++ experiment codes (Figures 3–8)
+|
+├── cpp-api # C++ dynamic library settings
+│
+├── matlab-mex/ # MATLAB MEX gateway to the C++ utilities
+│
+└── matlab-dll/ # MATLAB callable C++ dynamic library (Windows only)
 
 ---
 
