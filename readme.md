@@ -11,13 +11,15 @@ This repository contains the C++ source code, MATLAB interfaces, and experiment 
 
 dexp/
 │
-├── main.cpp # C++ executable driver; basics.hpp, basics.cpp # Basic experiment utilities
+├── main.cpp # C++ executable driver
+├── basics.hpp # Basic experiment utilities
+├── basics.cpp
 │
 ├── skewblas/ # C++ source code: Schur blocks, expm, dexp, DK formulas, etc.
 │
 ├── test/ # C++ experiment codes (Figures 3–8)
-|
-├── cpp-api # C++ dynamic library settings
+│
+├── cpp-api/ # C++ dynamic library settings
 │
 ├── matlab-mex/ # MATLAB MEX gateway to the C++ utilities
 │
@@ -36,12 +38,14 @@ To reproduce experiments in Figures 5(a), 7(a), and 8:
        test_expm
 
 The scripts will automatically compile the MEX files when needed.
-Run multiple times for stable timing.
+
+> **Warning:** Run multiple times for stable timing.
 
 Available MEX utilities:
-Schur decomposition: mex_sblas_ss2schur, mex_sblas_so2schur
-Matrix exponential: mex_sblas_expm, mex_pade_expm
-Differential of expm: sblas_dexp, pade_dexp, dk_dexp
+
+- Schur decomposition: mex_sblas_ss2schur, mex_sblas_so2schur
+- Matrix exponential: mex_sblas_expm, mex_pade_expm
+- Differential of expm: sblas_dexp, pade_dexp, dk_dexp
 
 ### 2. MATLAB + Windows DLL (dexp/matlab-dll)
 
@@ -51,9 +55,9 @@ To use the MATLAB-callable DLL:
        test_dexp
        test_expm
 
-Warning: MATLAB may crash when repeatedly passing large matrices
-(100×100 or larger) between MATLAB and the DLL due to unstable
-MATLAB memory-management behavior.
+> **Warning:** MATLAB may crash when repeatedly passing large matrices
+> (100×100 or larger) between MATLAB and the DLL due to unstable
+> MATLAB memory-management behavior.
 
 ---
 
