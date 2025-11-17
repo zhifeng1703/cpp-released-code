@@ -33,6 +33,12 @@ dexp/
 
 ## 1. Run codes in MATLAB
 
+These codes are ran and tested under the MATLAB 2024a under the following environment:
+
+- CPU/RAM: 13th Gen Intel(R) Core(TM) i5-13600KF, 14 Cores, 3.50 GHz / 16 GB. 731
+- OS: Windows 11
+- BLAS and LAPACK Library: Intel(R) Math Kernel Library.
+
 ### 1.1 MATLAB MEX Gateway (dexp/matlab-mex)
 
 To reproduce experiments in Figures 5(a), 7(a), and 8:
@@ -65,10 +71,15 @@ To use the MATLAB-callable DLL:
 
 ---
 
-## 2. Compiling the C++ Source Code
+## 2. Run codes in C++
 
-Requirements: - g++ (C++17 or later) - Intel OneMKL (BLAS/LAPACK):
-https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html
+These codes are ran and tested under the following environment:
+
+- CPU/RAM: 13th Gen Intel(R) Core(TM) i5-13600KF, 14 Cores, 3.50 GHz / 16 GB. 731
+- OS: Windows 11, Windows Subsystem Linux (Ubuntu 22.04.5 LTS). 732
+- BLAS and LAPACK Library: Intel(R) Math Kernel Library.
+- Requirements: - g++ (C++17 or later) - Intel OneMKL (BLAS/LAPACK):
+  https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html
 
 Before compiling, edit the Makefile and set:
 
@@ -82,7 +93,7 @@ To compile the main code:
 
 ### 2.1 Reproducing Paper Experiments
 
-Figure 3:
+Figure 3(a), 4-7, 8(a):
 Replace dexp/main.cpp with dexp/test/elapsed_test.cpp and Run make
 
 ```bash
@@ -90,7 +101,7 @@ cp dexp/test/elapsed_test.cpp dexp/main.cpp
 make
 ```
 
-Figures 4–8:
+Figures 3(b), 8(b):
 Same procedure:
 Replace dexp/main.cpp with dexp/test/error_test.cpp and Run make
 
