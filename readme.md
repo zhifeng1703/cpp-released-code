@@ -1,6 +1,6 @@
 # Instruction of the `dexp` Project
 
-`dexp` – Source Code and Experiments for
+Source Code and Experiments for
 “The Exponential of Skew-Symmetric Matrices: A Nearby Inverse and Efficient Computation of Derivatives”
 Authors: Zhifeng Deng, P.-A. Absil, Kyle Gallivan, Wen Huang
 arXiv: https://arxiv.org/abs/2506.18302
