@@ -1,4 +1,4 @@
-## Instruction of the `dexp` Project
+# Instruction of the `dexp` Project
 
 `dexp` – Source Code and Experiments for
 “The Exponential of Skew-Symmetric Matrices: A Nearby Inverse and Efficient Computation of Derivatives”
