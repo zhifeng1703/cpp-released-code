@@ -16,7 +16,6 @@ dexp/
 │
 ├── main.cpp          # C++ executable driver
 ├── basics.hpp        # Basic experiment utilities
-├── basics.cpp
 │
 ├── skewblas/         # C++ source code: Schur blocks, expm, dexp, DK formulas, etc.
 │
