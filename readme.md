@@ -27,6 +27,8 @@ dexp/
 ├── matlab-mex/       # MATLAB MEX gateway to the C++ utilities
 │
 └── matlab-dll/       # MATLAB callable C++ dynamic library (Windows only)
+
+
 ```
 
 ---
@@ -59,6 +61,12 @@ Available MEX utilities:
 
 ### 1.2 MATLAB + Windows DLL (dexp/matlab-dll)
 
+The MATLAB-callable dll is compiled under the following environment:
+
+- CPU/RAM: 13th Gen Intel(R) Core(TM) i5-13600KF, 14 Cores, 3.50 GHz / 16 GB. 731
+- OS: Windows 11
+- BLAS and LAPACK Library: Intel(R) Math Kernel Library.
+
 To use the MATLAB-callable DLL:
 
        cd dexp/matlab-dll
@@ -81,33 +89,34 @@ These codes are ran and tested under the following environment:
 - Requirements: - g++ (C++17 or later) - Intel OneMKL (BLAS/LAPACK):
   https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html
 
-Before compiling, edit the Makefile and set:
-
-    MKLROOT = /path/to/your/oneMKL/installation
-
-To compile the main code:
-
-    make
+The compilation relies on the environment variable \verb+MKLROOT+, which specifies the location of \verb+Intel OneAPI MKL+ (typically \verb+/path/to/your/intel/oneapi/mkl/latest+). This variable is automatically set when the Intel oneAPI environment is initialized, e.g.
+```bash
+source /path/to/your/intel/oneapi/setvars.sh
+```
+If \verb+MKLROOT+ is not defined, the \verb+Makefile+ contains the fallback line at line 14
+```bash
+MKLROOT ?= /opt/intel/oneapi/mkl/latest
+```
+which uses the default installation path. Users may edit this line if \verb+MKL+ is installed elsewhere, but this is not necessary when \verb+setvars.sh+ has been sourced correctly.
 
 ---
 
 ### 2.1 Reproducing Paper Experiments
 
-Figure 3(a), 4-7, 8(a):
-Replace dexp/main.cpp with dexp/test/elapsed_test.cpp and Run make
-
+For reproducing paper experiments, compile the test codes \verb+/test/*_test.cpp+ with the line:
 ```bash
-cp dexp/test/elapsed_test.cpp dexp/main.cpp
-make
+make tests
 ```
-
-Figures 3(b), 8(b):
-Same procedure:
-Replace dexp/main.cpp with dexp/test/error_test.cpp and Run make
-
+which produces two executables: \verb+elapsed_test+ and \verb+error_test+. For Figure 3(a), 4-7, 8(a) in the paper: run
 ```bash
-cp dexp/test/error_test.cpp dexp/main.cpp
-make
+./elapsed_test -task forward
+```
+for the differentiation, and run \verb+./elapsed_test -task inverse+ 
+```bash
+./elapsed_test -task inverse
+```
+for the inversed differentiation. For Figures 3(b), 8(b) in the paper: run     ```bash
+./error_test
 ```
 
 ---
