@@ -112,12 +112,10 @@ which produces two executables: elapsed_test and error_test. For Figure 3(a), 4-
 ```bash
 ./elapsed_test -task forward
 ```
-for the differentiation, and run ./elapsed_test -task inverse 
+for the differentiation, and run
 ```bash
 ./elapsed_test -task inverse
 ```
 for the inversed differentiation. For Figures 3(b), 8(b) in the paper: run     ```bash
 ./error_test
 ```
-
----
