@@ -26,7 +26,9 @@ dexp/
 │
 ├── matlab-mex/       # MATLAB MEX gateway to the C++ utilities
 │
-└── matlab-dll/       # MATLAB callable C++ dynamic library (Windows only)
+├── matlab-dll/       # MATLAB callable C++ dynamic library (Windows only)
+│
+└── figures/          # Figures inputs and outputs of the experiments.
 
 
 ```
@@ -89,29 +91,29 @@ These codes are ran and tested under the following environment:
 - Requirements: - g++ (C++17 or later) - Intel OneMKL (BLAS/LAPACK):
   https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html
 
-The compilation relies on the environment variable \verb+MKLROOT+, which specifies the location of \verb+Intel OneAPI MKL+ (typically \verb+/path/to/your/intel/oneapi/mkl/latest+). This variable is automatically set when the Intel oneAPI environment is initialized, e.g.
+The compilation relies on the environment variable MKLROOT, which specifies the location of Intel OneAPI MKL (typically /path/to/your/intel/oneapi/mkl/latest). This variable is automatically set when the Intel oneAPI environment is initialized, e.g.
 ```bash
 source /path/to/your/intel/oneapi/setvars.sh
 ```
-If \verb+MKLROOT+ is not defined, the \verb+Makefile+ contains the fallback line at line 14
+If MKLROOT is not defined, the Makefile contains the fallback line at line 14
 ```bash
 MKLROOT ?= /opt/intel/oneapi/mkl/latest
 ```
-which uses the default installation path. Users may edit this line if \verb+MKL+ is installed elsewhere, but this is not necessary when \verb+setvars.sh+ has been sourced correctly.
+which uses the default installation path. Users may edit this line if MKL is installed elsewhere, but this is not necessary when setvars.sh has been sourced correctly.
 
 ---
 
 ### 2.1 Reproducing Paper Experiments
 
-For reproducing paper experiments, compile the test codes \verb+/test/*_test.cpp+ with the line:
+For reproducing paper experiments, compile the test codes /test/*_test.cpp with the line:
 ```bash
 make tests
 ```
-which produces two executables: \verb+elapsed_test+ and \verb+error_test+. For Figure 3(a), 4-7, 8(a) in the paper: run
+which produces two executables: elapsed_test and error_test. For Figure 3(a), 4-7, 8(a) in the paper: run
 ```bash
 ./elapsed_test -task forward
 ```
-for the differentiation, and run \verb+./elapsed_test -task inverse+ 
+for the differentiation, and run ./elapsed_test -task inverse 
 ```bash
 ./elapsed_test -task inverse
 ```
