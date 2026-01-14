@@ -20,7 +20,7 @@
 
 int main(int argc, char *argv[])
 {
-    string def_val[num_main_option] = {"100", "9527", "/mnt/d/figures/dexp"};
+    string def_val[num_main_option] = {"100", "9527", "./figures"};
     string options[num_main_option] = {"-max-size", "-seed", "-file"};
 
     auto paras = read_paras(argc, argv, num_main_option, def_val, options);
