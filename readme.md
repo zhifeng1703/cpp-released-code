@@ -116,8 +116,7 @@ for the differentiation, and run
 ```bash
 ./elapsed_test -task inverse
 ```
-for the inversed differentiation. For Figures 3(b), 8(b) in the paper: run     ```
-./elapsed_test -task inverse
+for the inversed differentiation. For Figures 3(b), 8(b) in the paper: run
+```bash
+./error_test
 ```
-
----
