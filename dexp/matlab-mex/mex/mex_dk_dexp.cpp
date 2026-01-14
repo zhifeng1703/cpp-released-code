@@ -2,6 +2,7 @@
 #include "matrix.h"
 #include <string>
 #include <cstring>
+#include <cmath>
 
 extern "C"
 {
