@@ -20,8 +20,8 @@ function build_mex
         ['-I' root_src]
         '-lmwblas'
         '-lmwlapack'
-        'CXXFLAGS="$CXXFLAGS -w -Qunused-arguments"'
-        'CFLAGS="$CFLAGS -w -Qunused-arguments"'
+        %'CXXFLAGS="$CXXFLAGS -w -Qunused-arguments"' % Clang option only
+        %'CFLAGS="$CFLAGS -w -Qunused-arguments"' % Clang option only
         'LDFLAGS="$LDFLAGS -w"'
         '-outdir' 
         root_mex
