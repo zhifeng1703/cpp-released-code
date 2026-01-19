@@ -20,7 +20,7 @@
 
 int main(int argc, char *argv[])
 {
-    string def_val[num_main_option] = {"100", "9527", "./figures"};
+    string def_val[num_main_option] = {"1000", "9527", "./figures"};
     string options[num_main_option] = {"-max-size", "-seed", "-file"};
 
     auto paras = read_paras(argc, argv, num_main_option, def_val, options);
@@ -49,7 +49,9 @@ int main(int argc, char *argv[])
 
     if (!fin_skew || !fin_spor || !fin_forw || !fin_inve)
     {
-        std::cerr << "Failed to open the file for exact matrices. Example sets are available in https://github.com/zhifeng1703/cpp-released-code/dexp/figures\n";
+        std::cerr << "Failed to open the file for exact matrices. Example sets are available in \n"
+                  << "https://github.com/zhifeng1703/cpp-released-code/dexp\n under the figures folder.\n"
+                  << "Alternatively, the float256_pade_expm.jl Julia script can generate customized data set.\n";
         return 1;
     }
 
