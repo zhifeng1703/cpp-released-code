@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     if (!fin_skew || !fin_spor || !fin_forw || !fin_inve)
     {
-        std::cerr << "Failed to open the file.\n";
+        std::cerr << "Failed to open the file for exact matrices. Example sets are available in https://github.com/zhifeng1703/cpp-released-code/dexp/figures\n";
         return 1;
     }
 
