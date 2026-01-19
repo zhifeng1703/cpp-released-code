@@ -129,3 +129,7 @@ or run (in `Linux` or `MacOS`)
 ```bash
 julia -e 'include("float256_pade_expm.jl"); expm_accurate_data((30,80); seed=1234);'
 ```
+The `error_test` on the new set of matrices is performed by running 
+```bash
+./error_test -seed 1234
+```
