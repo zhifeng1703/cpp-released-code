@@ -50,7 +50,7 @@ To reproduce experiments in Figures 5(a), 7(a), and 8:
        test_dexp
        test_expm
 
-The scripts will automatically compile the MEX files when needed.
+The scripts will automatically compile the `MEX` files when needed.
 
 > **Warning:** Run multiple times for stable timing.
 
@@ -90,7 +90,7 @@ These codes are ran and tested under the following environment:
 - Requirements: - g++ (C++17 or later) - Intel OneMKL (BLAS/LAPACK):
   https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html
 
-The compilation relies on the environment variable MKLROOT, which specifies the location of Intel OneAPI MKL (typically /path/to/your/intel/oneapi/mkl/latest). This variable is automatically set when the Intel oneAPI environment is initialized, e.g.
+The compilation relies on the environment variable `MKLROOT`, which specifies the location of Intel OneAPI MKL (typically `/path/to/your/intel/oneapi/mkl/latest`). This variable is automatically set when the Intel oneAPI environment is initialized, e.g.
 ```bash
 source /path/to/your/intel/oneapi/setvars.sh
 ```
@@ -98,17 +98,17 @@ If MKLROOT is not defined, the Makefile contains the fallback line at line 14
 ```bash
 MKLROOT ?= /opt/intel/oneapi/mkl/latest
 ```
-which uses the default installation path. Users may edit this line if MKL is installed elsewhere, but this is not necessary when setvars.sh has been sourced correctly.
+which uses the default installation path. Users may edit this line if MKL is installed elsewhere, but this is not necessary when `setvars.sh` has been sourced correctly.
 
 ---
 
 ### 2.1 Reproducing Paper Experiments
 
-For reproducing paper experiments, compile the test codes /test/*_test.cpp with the line:
+For reproducing paper experiments, compile the test codes `/test/*_test.cpp` with the line:
 ```bash
 make tests
 ```
-which produces two executables: elapsed_test and error_test. For Figure 3(a), 4-7, 8(a) in the paper: run
+which produces two executables: `elapsed_test` and `error_test`. For Figure 3(a), 4-7, 8(a) in the paper: run
 ```bash
 ./elapsed_test -task forward
 ```
@@ -119,4 +119,13 @@ for the differentiation, and run
 for the inversed differentiation. For Figures 3(b), 8(b) in the paper: run
 ```bash
 ./error_test
+```
+
+Note that `error_test` requires the accurate matrices $A, Q, X, Y$ in $\mathrm{D}\exp(A)[X] = QY$. These matrices are provided in the `figures` folder, along with the `Julia` script that generates them. To generate the accurate matrices from $n=30$ to $n=80$ with the random seed `1234`, navigate to the `figures` folder and run (in `Windows`)
+```bash
+julia -e "include(\"float256_pade_expm.jl\"); expm_accurate_data((30,80); seed=1234);"
+```
+or run (in `Linux` or `MacOS`)
+```bash
+julia -e 'include("float256_pade_expm.jl"); expm_accurate_data((30,80); seed=1234);'
 ```
