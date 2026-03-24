@@ -116,6 +116,7 @@ public:
     void _dexpSkewSymm_forward_core(SkewSymmMat &Y, SkewSymmMat &X);
     void _dexpSkewSymm_inverse_core(SkewSymmMat &Y, SkewSymmMat &X);
 
+#ifndef MATLAB_MEX_BUILD
     void printf(const char *s, INTE_TYPE subsystem_num)
     {
         std::printf("%s", s);
@@ -182,6 +183,7 @@ public:
 
     void printf(const char *s) { printf(s, 2); };
     void printf() { printf("", 2); };
+#endif
 
     void SkewCongruence(CBLAS_TRANSPOSE trans, REAL_TYPE *MatY, INTE_TYPE ldy, REAL_TYPE *MatX, INTE_TYPE ldx)
     {

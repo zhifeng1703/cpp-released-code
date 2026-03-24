@@ -9,6 +9,7 @@
 #else
 #include "blasType.hpp"
 #endif
+
 #include "colMat.hpp"
 #include "arrVec.hpp"
 #include "skewMat.hpp"
@@ -213,18 +214,20 @@ public:
             offdiag[0] = ptrH[0];
     }
 
-    // void printf()
-    // {
-    //     std::printf("Householder Reflectors in compact V form:\n");
-    //     MatV.printf();
-    //     std::printf("Vector of tau values in Householder Reflectors:\n");
-    //     for (INTE_TYPE ind = 0; ind < d - 1; ind++)
-    //         std::printf("%f\n", VecT.v[ind]);
-    //     // std::printf("Householder reflectors in compact W form (may be not computed):\n");
-    //     // MatW.printf();
-    //     std::printf("Householder reflectors in Matrix I - WV' form (may be not computed):\n");
-    //     MatH.printf();
-    // };
+#ifndef MATLAB_MEX_BUILD
+    void printf()
+    {
+        std::printf("Householder Reflectors in compact V form:\n");
+        MatV.printf();
+        std::printf("Vector of tau values in Householder Reflectors:\n");
+        for (INTE_TYPE ind = 0; ind < d - 1; ind++)
+            std::printf("%f\n", VecT.v[ind]);
+        // std::printf("Householder reflectors in compact W form (may be not computed):\n");
+        // MatW.printf();
+        std::printf("Householder reflectors in Matrix I - WV' form (may be not computed):\n");
+        MatH.printf();
+    };
+#endif
 };
 
 // class HouseholderReflector : public ColMat<REAL_TYPE>

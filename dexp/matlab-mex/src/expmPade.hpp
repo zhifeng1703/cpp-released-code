@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef MATLAB_MEX_BUILD
+#include "mkl.h"
+#endif
+
 #include "colMat.hpp"
 #include "pivotedLU.hpp"
 

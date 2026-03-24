@@ -115,59 +115,62 @@ public:
     // It is very important to note that the (deep) copy operator of the View object is NOT called in the copy constructor
     // as this object MUST be an shallow object that does not own or operate any data unless specifically instructed.
 
-    // void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
-    // {
-    //     using std::fprintf;
+#ifndef MATLAB_MEX_BUILD
+    void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
+    {
+        using std::fprintf;
 
-    //     INTE_TYPE row = (row_limit < r) ? row_limit : r;
-    //     INTE_TYPE col = (col_limit < c) ? col_limit : c;
+        INTE_TYPE row = (row_limit < r) ? row_limit : r;
+        INTE_TYPE col = (col_limit < c) ? col_limit : c;
 
-    //     fprintf(of, "%s", prefix);
-    //     fprintf(of, "[\n");
-    //     for (auto row_ind = 0; row_ind < row; row_ind++, (col == c ? fprintf(of, "%s", ";\n") : fprintf(of, "%s", "...\n")))
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             fprintf(of, format, ptr(col_ind)[row_ind]);
-    //     if (row == r)
-    //     {
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             fprintf(of, "%s", "...\t");
-    //         fprintf(of, "%s", "\n");
-    //     }
-    //     fprintf(of, "%s", "]\n\n");
-    // };
+        fprintf(of, "%s", prefix);
+        fprintf(of, "[\n");
+        for (auto row_ind = 0; row_ind < row; row_ind++, (col == c ? fprintf(of, "%s", ";\n") : fprintf(of, "%s", "...\n")))
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                fprintf(of, format, ptr(col_ind)[row_ind]);
+        if (row == r)
+        {
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                fprintf(of, "%s", "...\t");
+            fprintf(of, "%s", "\n");
+        }
+        fprintf(of, "%s", "]\n\n");
+    };
 
-    // void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
-    // void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, "", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of) { fprintf(of, "", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
+    void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, "", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of) { fprintf(of, "", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
 
-    // void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
-    // {
-    //     using std::printf;
+    void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
+    {
+        using std::printf;
 
-    //     INTE_TYPE row = (row_limit < r) ? row_limit : r;
-    //     INTE_TYPE col = (col_limit < c) ? col_limit : c;
+        INTE_TYPE row = (row_limit < r) ? row_limit : r;
+        INTE_TYPE col = (col_limit < c) ? col_limit : c;
 
-    //     printf("%s", prefix);
-    //     printf("[\n");
-    //     for (auto row_ind = 0; row_ind < row; row_ind++, (col == c ? printf(";\n") : printf("...\n")))
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             printf(format, ptr(col_ind)[row_ind]);
-    //     if (row != r)
-    //     {
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             printf("...\t");
-    //         printf("\n");
-    //     }
-    //     printf("]\n\n");
-    // };
+        printf("%s", prefix);
+        printf("[\n");
+        for (auto row_ind = 0; row_ind < row; row_ind++, (col == c ? printf(";\n") : printf("...\n")))
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                printf(format, ptr(col_ind)[row_ind]);
+        if (row != r)
+        {
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                printf("...\t");
+            printf("\n");
+        }
+        printf("]\n\n");
+    };
 
-    // void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { printf(prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void printf(const char *prefix, const char *format) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
-    // void printf(const char *prefix) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void printf(INTE_TYPE row_limit, INTE_TYPE col_limit) { printf("", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void printf() { printf("", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { printf(prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, const char *format) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
+    void printf(const char *prefix) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf(INTE_TYPE row_limit, INTE_TYPE col_limit) { printf("", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf() { printf("", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+
+#endif
 
     void Ones()
     {
@@ -338,60 +341,61 @@ public:
 
     // It is very important to note that the (deep) copy operator of the View object is NOT called in the copy constructor
     // as this object MUST be an shallow object that does not own or operate any data unless specifically instructed.
+#ifndef MATLAB_MEX_BUILD
+    void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
+    {
+        using std::fprintf;
 
-    // void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
-    // {
-    //     using std::fprintf;
+        INTE_TYPE row = (row_limit < r) ? row_limit : r;
+        INTE_TYPE col = (col_limit < c) ? col_limit : c;
 
-    //     INTE_TYPE row = (row_limit < r) ? row_limit : r;
-    //     INTE_TYPE col = (col_limit < c) ? col_limit : c;
+        fprintf(of, "%s", prefix);
+        fprintf(of, "[\n");
+        for (auto row_ind = 0; row_ind < row; row_ind++, (col == c ? fprintf(of, "%s", ";\n") : fprintf(of, "%s", "...\n")))
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                fprintf(of, format, ptr(col_ind)[row_ind]);
+        if (row != r)
+        {
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                fprintf(of, "%s", "...\t");
+            fprintf(of, "%s", "\n");
+        }
+        fprintf(of, "%s", "]\n\n");
+    };
 
-    //     fprintf(of, "%s", prefix);
-    //     fprintf(of, "[\n");
-    //     for (auto row_ind = 0; row_ind < row; row_ind++, (col == c ? fprintf(of, "%s", ";\n") : fprintf(of, "%s", "...\n")))
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             fprintf(of, format, ptr(col_ind)[row_ind]);
-    //     if (row != r)
-    //     {
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             fprintf(of, "%s", "...\t");
-    //         fprintf(of, "%s", "\n");
-    //     }
-    //     fprintf(of, "%s", "]\n\n");
-    // };
+    void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
+    void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, "", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of) { fprintf(of, "", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
 
-    // void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
-    // void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of, INTE_TYPE row_limit, INTE_TYPE col_limit) { fprintf(of, "", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of) { fprintf(of, "", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
+    {
+        using std::printf;
 
-    // void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
-    // {
-    //     using std::printf;
+        INTE_TYPE row = (row_limit < r) ? row_limit : r;
+        INTE_TYPE col = (col_limit < c) ? col_limit : c;
 
-    //     INTE_TYPE row = (row_limit < r) ? row_limit : r;
-    //     INTE_TYPE col = (col_limit < c) ? col_limit : c;
+        printf("%s", prefix);
+        printf("[\n");
+        for (auto row_ind = 0; row_ind < row; row_ind++, ((col == c) ? printf(";\n") : printf("...\n")))
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                printf(format, ptr(col_ind)[row_ind]);
+        if (row != r)
+        {
+            for (auto col_ind = 0; col_ind < col; col_ind++)
+                printf("...\t");
+            printf("\n");
+        }
+        printf("]\n\n");
+    };
 
-    //     printf("%s", prefix);
-    //     printf("[\n");
-    //     for (auto row_ind = 0; row_ind < row; row_ind++, ((col == c) ? printf(";\n") : printf("...\n")))
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             printf(format, ptr(col_ind)[row_ind]);
-    //     if (row != r)
-    //     {
-    //         for (auto col_ind = 0; col_ind < col; col_ind++)
-    //             printf("...\t");
-    //         printf("\n");
-    //     }
-    //     printf("]\n\n");
-    // };
-
-    // void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { printf(prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void printf(const char *prefix, const char *format) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
-    // void printf(const char *prefix) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void printf(INTE_TYPE row_limit, INTE_TYPE col_limit) { printf("", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
-    // void printf() { printf("", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit) { printf(prefix, row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, const char *format) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, format); };
+    void printf(const char *prefix) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf(INTE_TYPE row_limit, INTE_TYPE col_limit) { printf("", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
+    void printf() { printf("", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+#endif
 
     void Ones()
     {

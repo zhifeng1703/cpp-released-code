@@ -1,5 +1,10 @@
 #pragma once
+
+#ifdef MATLAB_MEX_BUILD
+#include "blasType_mex.hpp"
+#else
 #include "blasType.hpp"
+#endif
 
 INTE_TYPE _mmlt_blk_size(INTE_TYPE d);
 

@@ -6,6 +6,8 @@
 #include "skewMat.hpp"
 #include "mmlt.hpp"
 
+#define zero_angle 1e-12
+
 class SkewSchurFactor
 {
     typedef SkewSchurFactor SELF_TYPE;
@@ -14,13 +16,16 @@ class SkewSchurFactor
     typedef HouseholderMatrix HHMT_TYPE;
 
 public:
-    INTE_TYPE d;
-    INTE_TYPE m;
-    INTE_TYPE k;
-    INTE_TYPE a;
+    INTE_TYPE d; // Dimension d x d
+    INTE_TYPE m; // m = floor(d / 2)
+    INTE_TYPE k; // k = ceil(d / 2)
+    INTE_TYPE a; // # of nonzero angles a \leq d. This quantity has been disabled and now uses m as default.
 
     MATX_TYPE R;
     VECT_TYPE A;
+
+    INTE_TYPE o;         // Determinant
+    ArrVec<INTE_TYPE> E; // Integer shifts to principal angles
 
     HHMT_TYPE H;
     MATX_TYPE U;
@@ -28,20 +33,21 @@ public:
 
     MATX_TYPE Work;
 
-    SkewSchurFactor() : d(0), m(0), k(0), R(ColMat<REAL_TYPE>()), A(ArrVec<REAL_TYPE>()), H(HouseholderMatrix()), U(ColMat<REAL_TYPE>()), Vt(ColMat<REAL_TYPE>()), Work(ColMat<REAL_TYPE>()) {};
-    SkewSchurFactor(INTE_TYPE dim) : d(dim), m(dim / 2), k(dim - dim / 2), R(ColMat<REAL_TYPE>(dim, dim)), A(ArrVec<REAL_TYPE>(dim / 2)),
+    SkewSchurFactor() : d(0), m(0), k(0), o(0), R(ColMat<REAL_TYPE>()), A(ArrVec<REAL_TYPE>()), E(ArrVec<INTE_TYPE>()), H(HouseholderMatrix()), U(ColMat<REAL_TYPE>()), Vt(ColMat<REAL_TYPE>()), Work(ColMat<REAL_TYPE>()) {};
+    SkewSchurFactor(INTE_TYPE dim) : d(dim), m(dim / 2), k(dim - dim / 2), o(0), R(ColMat<REAL_TYPE>(dim, dim)), A(ArrVec<REAL_TYPE>(dim / 2)), E(ArrVec<INTE_TYPE>(dim / 2)),
                                      H(HouseholderMatrix(dim)),
                                      U(ColMat<REAL_TYPE>(dim / 2, dim / 2)), Vt(ColMat<REAL_TYPE>(dim - dim / 2, dim - dim / 2)),
-                                     Work(ColMat<REAL_TYPE>(dim, dim)) {
-                                     };
+                                     Work(ColMat<REAL_TYPE>(dim, dim)) {};
     void copy(const SELF_TYPE &src)
     {
         this->d = src.d;
         this->m = src.m;
         this->k = src.k;
+        this->o = src.o;
 
         this->R.copy(src.R);
         this->A.copy(src.A);
+        this->E.copy(src.E);
 
         this->H.copy(src.H);
         this->U.copy(src.U);
@@ -53,6 +59,7 @@ public:
     {
         this->R.swap(rhs.R);
         this->A.swap(rhs.A);
+        this->E.swap(rhs.E);
 
         this->H.swap(rhs.H);
         this->U.swap(rhs.U);
@@ -63,6 +70,7 @@ public:
         swap(this->d, rhs.d);
         swap(this->m, rhs.m);
         swap(this->k, rhs.k);
+        swap(this->o, rhs.o);
     }
     SkewSchurFactor &operator=(const SELF_TYPE &rhs)
     {
@@ -110,30 +118,35 @@ public:
                     a += (abs(A[blk_ind]) > 1e-12);
                     break;
                 }
+
+        a = m; // disable a for accuracy concern in the Stiefel geodesic problem.
     };
 
     void _principal_angles(REAL_TYPE *MatQ, INTE_TYPE ldq) { _principal_angles(MatQ, ldq, R.v, d); };
 
-    // void _principal_angles(REAL_TYPE *MatQ, INTE_TYPE ldq)
-    // {
-    //     // Based on the computed Schur vectors in H.MatR and the original matrix,
-    //     // determine the principal angles of the orthogonal matrix in O(n^2).
-    //     REAL_TYPE _cos, _sin, _vec;
-    //     REAL_TYPE *_col_r = R.v;
-    //     a = 0;
-    //     for (auto blk_ind = 0; blk_ind < m; blk_ind++, _col_r += 2 * d)
-    //         for (auto row_ind = 0; row_ind < d; row_ind++)
-    //             if (abs(_col_r[row_ind]) > 1e-10)
-    //             {
-    //                 _sin = A[blk_ind];
-    //                 _vec = cblas_ddot(d, MatQ + row_ind, ldq, _col_r, 1) - _sin * _col_r[row_ind + d];
-    //                 _cos = std::copysign(sqrt(1 - _sin * _sin), _vec / _col_r[row_ind]);
-    //                 // std::printf("\nsine: %1.8e,\t cosine: %1.8e, \t entry 1: %1.8e, \t entry 2: %1.8e\n", _sin, _cos, _vec, _col_r[row_ind]);
-    //                 A[blk_ind] = atan2(_sin, _cos);
-    //                 a += (abs(A[blk_ind]) > 1e-12);
-    //                 break;
-    //             }
-    // }
+    void _ssf_principal_angles(REAL_TYPE *VecA)
+    {
+        auto Av = A.v;
+        auto Ev = E.v;
+        for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+        {
+            int x = static_cast<int>(std::floor((VecA[blk_ind] + M_PI) / (2 * M_PI)));
+            Ev[blk_ind] = x;
+            Av[blk_ind] = VecA[blk_ind] - 2 * M_PI * x;
+
+            // safety against roundoff drift outside (-pi, pi]
+            if (Av[blk_ind] <= -M_PI)
+            {
+                Av[blk_ind] += 2 * M_PI;
+                Ev[blk_ind] -= 1;
+            }
+            else if (Av[blk_ind] > M_PI)
+            {
+                Av[blk_ind] -= 2 * M_PI;
+                Ev[blk_ind] += 1;
+            }
+        }
+    };
 
     void Factor_SpecOrth(REAL_TYPE *MatQ, INTE_TYPE ldq)
     {
@@ -151,11 +164,41 @@ public:
             Factor_SpecOrth(MatM, ldm);
     };
 
-    void SchurAngular_SkewSymm();
-    void SchurAngular_SpecOrth()
+    inline INTE_TYPE _ssf_sgn(REAL_TYPE val) { return (std::abs(val) < zero_angle) ? 0 : (0 < val) - (val < 0); };
+    INTE_TYPE _ssf_det(REAL_TYPE *Q, INTE_TYPE ldq)
     {
-        // H stores the skew symmetric part of the special orthogonal matrix.
-    }
+        if (d == 0)
+            return 1;
+
+        Work.Assign(Q, ldq);
+
+        ArrVec<INTE_TYPE> ipiv(d);
+
+        INTE_TYPE info = LAPACKE_dgetrf(LAPACK_COL_MAJOR, d, d, Work.v, d, ipiv.v);
+        if (info != 0)
+            return 0;
+
+        INTE_TYPE det = 1;
+
+        // Each row interchange flips determinant sign.
+        // In LAPACK, ipiv[i] != i+1 means row i+1 was swapped.
+        for (INTE_TYPE i = 0; i < d; i++)
+            if (ipiv[i] != i + 1)
+                det = -det;
+
+        // Multiply by the signs of diagonal entries of U.
+        for (int i = 0; i < d; i++)
+        {
+            det *= _ssf_sgn(Work.v[i + i * d]);
+        }
+        return det;
+    };
+
+    void _ssf_swap_cols(INTE_TYPE i, INTE_TYPE j);
+    void _ssf_flip_cols(INTE_TYPE j);
+
+    void SchurAngular_SkewSymm();
+    void Canonical_SchurAngular();
 
     void Explict_Vector(REAL_TYPE *MatR, INTE_TYPE ldr);
     void Explict_Vector() { Explict_Vector(R.v, R.r); };
@@ -177,8 +220,6 @@ public:
             cblas_daxpy(d, -A[blk_ind], R.v + (2 * blk_ind + 1) * d, 1, Work.v + 2 * blk_ind, d);
             cblas_daxpy(d, A[blk_ind], R.v + 2 * blk_ind * d, 1, Work.v + 2 * blk_ind + 1, d);
         }
-
-        // cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, d, d, d, 1.0, R.v, d, Work.v, d, 0.0, MatA, lda);
         skewblas_mmlt(CblasNoTrans, CblasNoTrans, d, d, d, 1.0, R.v, d, Work.v, d, 0.0, MatA, lda);
     }
 
@@ -193,6 +234,74 @@ public:
 
     void Exponential(ColMat<REAL_TYPE> &MatQ) { Exponential(MatQ.v, MatQ.r); };
     void Exponential(View_ColMat<REAL_TYPE> &ViewQ) { Exponential(ViewQ.v, ViewQ.ld); };
+
+    void Principal_Logarithm(REAL_TYPE *MatX, INTE_TYPE ldx)
+    {
+        _ssf_principal_angles(A.v);
+        GetSkewSymm(MatX, ldx);
+    }
+
+    void Diffeomorphic_Logarithm(REAL_TYPE *MatX, INTE_TYPE ldx, REAL_TYPE *MatS, INTE_TYPE lds, SkewSchurFactor &ssfS)
+    {
+        // ssfS.Canonical_SchurAngular();
+        // this->Canonical_SchurAngular();
+
+        // Both the ssfS and this ssf must be canonically aligned before calling Diffeomorphic_Logarithm. (Note that the cost of one aligment is negligible.)
+
+        const REAL_TYPE two_pi = 2 * M_PI;
+
+        BOOL_TYPE special_component = true;
+        if (ssfS.E[0] != 0 && ssfS.E[0] != -1)
+            special_component = false;
+        else
+        {
+            for (auto blk_ind = 1; blk_ind < m; blk_ind++)
+            {
+                if (ssfS.E[blk_ind] != 0)
+                {
+                    special_component = false;
+                    break;
+                }
+            }
+        }
+
+        _ssf_principal_angles(A.v);
+        if (!special_component)
+        {
+            memcpy(E.v, ssfS.E.v, sizeof(INTE_TYPE) * m);
+            for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+                A.v[blk_ind] += E[blk_ind] * two_pi;
+        }
+        else
+        {
+            cblas_dgemv(CblasColMajor, CblasNoTrans, d, d, 1.0, MatS, lds, R.v, 1, 0.0, Work.v, 1);
+            REAL_TYPE temp = A.v[0] - cblas_ddot(d, R.v + d, 1, Work.v, 1);
+            if (abs(temp) > abs(temp - two_pi))
+            {
+                E.v[0] = -1;
+                A.v[0] -= two_pi;
+            }
+        }
+        GetSkewSymm(MatX, ldx);
+    }
+
+    void SpecialDiffeo_Logarithm(REAL_TYPE *MatX, INTE_TYPE ldx, REAL_TYPE *MatS, INTE_TYPE lds)
+    {
+
+        const REAL_TYPE two_pi = 2 * M_PI;
+
+        _ssf_principal_angles(A.v);
+
+        cblas_dgemv(CblasColMajor, CblasNoTrans, d, d, 1.0, MatS, lds, R.v, 1, 0.0, Work.v, 1);
+        REAL_TYPE temp = A.v[0] - cblas_ddot(d, R.v + d, 1, Work.v, 1);
+        if (abs(temp) > abs(temp - two_pi))
+        {
+            E.v[0] = -1;
+            A.v[0] -= two_pi;
+        }
+
+        GetSkewSymm(MatX, ldx);
+    }
 
     REAL_TYPE _dist2twopi(REAL_TYPE x)
     {
@@ -234,11 +343,14 @@ public:
         return dist;
     };
 
-    // void printf(const char* s)
-    // {
-    //     std::printf("%s", s);
-    //     this->R.printf("Schur Vectors R:\n");
-    //     this->A.printf("Off-diagonals in the block diagonal skew symmetric D where RDR' = A:\n");
-    // };
-    // void printf() { this->printf(""); };
+#ifndef MATLAB_MEX_BUILD
+
+    void printf(const char *s)
+    {
+        std::printf("%s", s);
+        this->R.printf("Schur Vectors R:\n");
+        this->A.printf("Off-diagonals in the block diagonal skew symmetric D where RDR' = A:\n");
+    };
+    void printf() { this->printf(""); };
+#endif
 };

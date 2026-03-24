@@ -33,15 +33,19 @@ function compile_mex(mex_dir)
     fprintf('\n=== Checking MEX folder: %s ===\n', mex_dir);
 
     required_mex = {
-        'mex_sblas_expm'
-        'mex_sblas_dexp'
-        'mex_sblas_dexp_para'
-        'mex_dk_dexp'
-        'mex_dk_dexp_para'
-        'mex_pade_dexpfwd'
-        'mex_pade_dexpinv'
-        'mex_sblas_ss2schur'
-        'mex_sblas_so2schur'
+        'mex_sblas_expm.cpp'        
+        'mex_sblas_ss2schur.cpp'      
+        'mex_sblas_so2schur.cpp'
+        'mex_sblas_dexp_para.cpp'
+        'mex_sblas_dexp.cpp'
+        'mex_sblas_logm.cpp'
+        'mex_sblas_diffeo_logm.cpp'
+        'mex_sblas_spdiff_logm.cpp'
+        'mex_dk_dexp_para.cpp'
+        'mex_dk_dexp.cpp'
+        'mex_pade_expm.cpp'
+        'mex_pade_dexpfwd.cpp'
+        'mex_pade_dexpinv.cpp'
     };
 
     need_rebuild = false;

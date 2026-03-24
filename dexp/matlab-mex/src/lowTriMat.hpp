@@ -5,6 +5,10 @@
 #include <cassert>
 #include <cstring>
 
+#ifndef MATLAB_MEX_BUILD
+#include "blasType.hpp"
+#endif
+
 #include "colMat.hpp"
 #include "lowTra.hpp"
 

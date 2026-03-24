@@ -4,7 +4,12 @@
 #include <cstring>
 #include <cmath>
 
+#ifdef MATLAB_MEX_BUILD
+#include "blasType_mex.hpp"
+#else
 #include "blasType.hpp"
+#endif
+
 #include "colMat.hpp"
 #include "arrVec.hpp"
 #include "skewMat.hpp"
@@ -191,7 +196,7 @@ public:
         }
         else
         {
-            std::printf("Error! TRANS flag not supported!\n");
+            // std::printf("Error! TRANS flag not supported!\n");
             throw(1);
         }
     };
@@ -209,6 +214,7 @@ public:
             offdiag[0] = ptrH[0];
     }
 
+#ifndef MATLAB_MEX_BUILD
     void printf()
     {
         std::printf("Householder Reflectors in compact V form:\n");
@@ -221,6 +227,7 @@ public:
         std::printf("Householder reflectors in Matrix I - WV' form (may be not computed):\n");
         MatH.printf();
     };
+#endif
 };
 
 // class HouseholderReflector : public ColMat<REAL_TYPE>

@@ -2,9 +2,24 @@
 #include "matrix.h"
 #include <cstring>
 
+// extern "C"
+// {
+
+//     void SkewSymmSchur(double *MatR, double *VecA, double *MatS, int n);
+
+//     // Compute both forward & inverse DK parameters
+//     void DexpSkewSymmPara(double *ParaForward, double *ParaInverse,
+//                           double *VecA, int n);
+
+//     void DexpSkewSymmForward(double *MatY, double *MatX,
+//                              double *MatR, double *ParaForward, int n);
+
+//     void DexpSkewSymmInverse(double *MatY, double *MatX,
+//                              double *MatR, double *ParaInverse, int n);
+// }
+
 extern "C"
 {
-
     void SkewSymmSchur(double *MatR, double *VecA, double *MatS, int n);
 
     // Compute both forward & inverse DK parameters
@@ -12,10 +27,12 @@ extern "C"
                           double *VecA, int n);
 
     void DexpSkewSymmForward(double *MatY, double *MatX,
-                             double *MatR, double *ParaForward, int n);
+                             double *MatR, double *ParaForward,
+                             int n, bool adjoint);
 
     void DexpSkewSymmInverse(double *MatY, double *MatX,
-                             double *MatR, double *ParaInverse, int n);
+                             double *MatR, double *ParaInverse,
+                             int n, bool adjoint);
 }
 
 static void fail(const char *msg)
@@ -26,8 +43,8 @@ static void fail(const char *msg)
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
-    if (nrhs < 3)
-        fail("Usage: Y = mex_sblas_dexp(S, X, dir, [, para_struct])");
+    if (nrhs < 4)
+        fail("Usage: Y = mex_sblas_dexp(S, X, dir, adjoint [, para_struct])");
 
     /* ---------------------------------------------------------
        Read S
@@ -61,10 +78,21 @@ void mexFunction(int nlhs, mxArray *plhs[],
     mxGetString(prhs[2], dirbuf, sizeof(dirbuf));
     bool forward = !(dirbuf[0] == 'i' || dirbuf[0] == 'I');
 
+
+    /* ---------------------------------------------------------
+       Read adjoint
+       --------------------------------------------------------- */
+    const mxArray *adj_mx = prhs[3];
+    if (!mxIsLogicalScalar(adj_mx) && !(mxIsDouble(adj_mx) && mxGetNumberOfElements(adj_mx) == 1))
+        fail("adjoint must be a logical scalar or numeric scalar.");
+
+    bool adjoint = mxIsLogicalScalar(adj_mx) ? mxIsLogicalScalarTrue(adj_mx)
+                                             : (mxGetScalar(adj_mx) != 0.0);
+
     /* ---------------------------------------------------------
        Check if user supplied para struct: para = struct(R,A,ParaForward,ParaInverse)
        --------------------------------------------------------- */
-    bool have_para = (nrhs >= 4) && mxIsStruct(prhs[3]);
+    bool have_para = (nrhs >= 5) && mxIsStruct(prhs[4]);
 
     mxArray *R_mx, *A_mx, *PF_mx, *PI_mx;
     double *R, *A, *ParaF, *ParaI;
@@ -100,7 +128,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
            Load provided para struct
            ============================================== */
 
-        const mxArray *para_struct = prhs[3];
+        const mxArray *para_struct = prhs[4];
 
         R_mx = mxGetField(para_struct, 0, "R");
         A_mx = mxGetField(para_struct, 0, "A");
@@ -127,10 +155,10 @@ void mexFunction(int nlhs, mxArray *plhs[],
        --------------------------------------------------------- */
     if (forward)
     {
-        DexpSkewSymmForward(Y, X, R, ParaF, n);
+        DexpSkewSymmForward(Y, X, R, ParaF, n, adjoint);
     }
     else
     {
-        DexpSkewSymmInverse(Y, X, R, ParaI, n);
+        DexpSkewSymmInverse(Y, X, R, ParaI, n, adjoint);
     }
 }

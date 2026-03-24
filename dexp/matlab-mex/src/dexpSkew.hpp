@@ -21,7 +21,7 @@ class dexpSkewSymmPara
 
 public:
     INTE_TYPE d;
-    INTE_TYPE a;
+    INTE_TYPE a; // # of nonzero angles a \leq d. This quantity has been disabled and now uses m = div(d, 2) as default.
     BOOL_TYPE rank_deficient;
     INTE_TYPE _22_blk_size;
     INTE_TYPE _parvec_size;
@@ -111,77 +111,79 @@ public:
     void _setup_22_paras(REAL_TYPE *_forward, REAL_TYPE *_inverse, REAL_TYPE x, REAL_TYPE y);
     void _setup_12_paras(REAL_TYPE *_forward, REAL_TYPE *_inverse, REAL_TYPE x);
 
-    void _dexpSkewSymm_forward_core(REAL_TYPE *lvY, REAL_TYPE *lvX);
-    void _dexpSkewSymm_inverse_core(REAL_TYPE *lvY, REAL_TYPE *lvX);
-    void _dexpSkewSymm_forward_core(SkewSymmMat &Y, SkewSymmMat &X);
-    void _dexpSkewSymm_inverse_core(SkewSymmMat &Y, SkewSymmMat &X);
+    void _dexpSkewSymm_forward_core(REAL_TYPE *lvY, REAL_TYPE *lvX, BOOL_TYPE adjoint = false);
+    void _dexpSkewSymm_inverse_core(REAL_TYPE *lvY, REAL_TYPE *lvX, BOOL_TYPE adjoint = false);
+    void _dexpSkewSymm_forward_core(SkewSymmMat &Y, SkewSymmMat &X, BOOL_TYPE adjoint = false);
+    void _dexpSkewSymm_inverse_core(SkewSymmMat &Y, SkewSymmMat &X, BOOL_TYPE adjoint = false);
 
-    // void printf(const char *s, INTE_TYPE subsystem_num)
-    // {
-    //     std::printf("%s", s);
-    //     INTE_TYPE print_cnt = (subsystem_num < _22_blk_size) ? subsystem_num : _22_blk_size;
-    //     View_ColMat<REAL_TYPE> sys = View_ColMat<REAL_TYPE>();
-    //     using std::printf;
-    //     this->R.printf("Schur Vectors:\n");
-    //     this->A.printf("Angles:\n");
-    //     printf("\nLinear operator L_{Theta} and its inverse determined by the angles Theta of skew symmetric matrix S.,\n");
-    //     printf("such that Dexp_S[X] = exp(S) * R * (L_{Theta}(R^T * X * R)) * R^{T}.\n");
-    //     printf("The operators consists of independent 4 x 4 systems L_{i,j} acting on i,j-th 2 x 2 matrix partitions\n");
-    //     printf("and the optitional independent 2 x 2 systems L_{i,j} acting on i,j-th 1 x 2 matrix partitions.\n");
-    //     auto forward_ptr = _forward_para.v;
-    //     auto inverse_ptr = _inverse_para.v;
-    //     printf("Displaying the first %lld systems in the size of 2 x 2:\n----------------------------------------------------------------\n", print_cnt);
+#ifndef MATLAB_MEX_BUILD
+    void printf(const char *s, INTE_TYPE subsystem_num)
+    {
+        std::printf("%s", s);
+        INTE_TYPE print_cnt = (subsystem_num < _22_blk_size) ? subsystem_num : _22_blk_size;
+        View_ColMat<REAL_TYPE> sys = View_ColMat<REAL_TYPE>();
+        using std::printf;
+        this->R.printf("Schur Vectors:\n");
+        this->A.printf("Angles:\n");
+        printf("\nLinear operator L_{Theta} and its inverse determined by the angles Theta of skew symmetric matrix S.,\n");
+        printf("such that Dexp_S[X] = exp(S) * R * (L_{Theta}(R^T * X * R)) * R^{T}.\n");
+        printf("The operators consists of independent 4 x 4 systems L_{i,j} acting on i,j-th 2 x 2 matrix partitions\n");
+        printf("and the optitional independent 2 x 2 systems L_{i,j} acting on i,j-th 1 x 2 matrix partitions.\n");
+        auto forward_ptr = _forward_para.v;
+        auto inverse_ptr = _inverse_para.v;
+        printf("Displaying the first %lld systems in the size of 2 x 2:\n----------------------------------------------------------------\n", print_cnt);
 
-    //     INTE_TYPE angle_row = 1;
-    //     INTE_TYPE angle_col = 0;
-    //     for (INTE_TYPE blk_ind = 0; blk_ind < print_cnt; blk_ind++, forward_ptr += 16, inverse_ptr += 16)
-    //     {
-    //         sys.Reset(forward_ptr, 4, 4, 4);
-    //         printf("Systems with angle[%lld]= %1.3f,\t and angle[%lld]= %1.3f:\n", angle_row, A[angle_row], angle_col, A[angle_col]);
-    //         printf("Multiples to PI, sum:\t %1.3f, diff:\t %1.3f\n", (A[angle_row] + A[angle_col]) / M_PI, (A[angle_row] - A[angle_col]) / M_PI);
+        INTE_TYPE angle_row = 1;
+        INTE_TYPE angle_col = 0;
+        for (INTE_TYPE blk_ind = 0; blk_ind < print_cnt; blk_ind++, forward_ptr += 16, inverse_ptr += 16)
+        {
+            sys.Reset(forward_ptr, 4, 4, 4);
+            printf("Systems with angle[%lld]= %1.3f,\t and angle[%lld]= %1.3f:\n", angle_row, A[angle_row], angle_col, A[angle_col]);
+            printf("Multiples to PI, sum:\t %1.3f, diff:\t %1.3f\n", (A[angle_row] + A[angle_col]) / M_PI, (A[angle_row] - A[angle_col]) / M_PI);
 
-    //         printf("Forward system\n");
-    //         sys.printf();
-    //         sys.Reset(inverse_ptr, 4, 4, 4);
-    //         printf("Inverse system:\n");
-    //         sys.printf();
-    //         angle_row++;
-    //         if (angle_row == a)
-    //         {
-    //             angle_col++;
-    //             angle_row = angle_col + 1;
-    //         }
-    //     }
-    //     if (print_cnt < _22_blk_size)
-    //         printf("... other 4 x 4 systems omitted ...\n----------------------------------------------------------------\n");
-    //     else
-    //         printf("----------------------------------------------------------------\n");
+            printf("Forward system\n");
+            sys.printf();
+            sys.Reset(inverse_ptr, 4, 4, 4);
+            printf("Inverse system:\n");
+            sys.printf();
+            angle_row++;
+            if (angle_row == a)
+            {
+                angle_col++;
+                angle_row = angle_col + 1;
+            }
+        }
+        if (print_cnt < _22_blk_size)
+            printf("... other 4 x 4 systems omitted ...\n----------------------------------------------------------------\n");
+        else
+            printf("----------------------------------------------------------------\n");
 
-    //     if (d % 2)
-    //     {
-    //         print_cnt = subsystem_num < a ? subsystem_num : a;
-    //         forward_ptr = _forward_para.v + 16 * _22_blk_size;
-    //         inverse_ptr = _inverse_para.v + 16 * _22_blk_size;
-    //         printf("Displaying the first %lld 2 x 2 systems:\n----------------------------------------------------------------\n", print_cnt);
+        if (d % 2)
+        {
+            print_cnt = subsystem_num < a ? subsystem_num : a;
+            forward_ptr = _forward_para.v + 16 * _22_blk_size;
+            inverse_ptr = _inverse_para.v + 16 * _22_blk_size;
+            printf("Displaying the first %lld 2 x 2 systems:\n----------------------------------------------------------------\n", print_cnt);
 
-    //         for (INTE_TYPE blk_ind = 0; blk_ind < print_cnt; blk_ind++, forward_ptr += 4, inverse_ptr += 4)
-    //         {
-    //             sys.Reset(forward_ptr, 2, 2, 2);
-    //             printf("Forward system:\n");
-    //             sys.printf();
-    //             sys.Reset(inverse_ptr, 2, 2, 2);
-    //             printf("Inverse system:\n");
-    //             sys.printf();
-    //         }
-    //         if (print_cnt < a)
-    //             printf("... other 2 x 2 systems omitted ...\n----------------------------------------------------------------\n");
-    //         else
-    //             printf("----------------------------------------------------------------\n");
-    //     }
-    // };
+            for (INTE_TYPE blk_ind = 0; blk_ind < print_cnt; blk_ind++, forward_ptr += 4, inverse_ptr += 4)
+            {
+                sys.Reset(forward_ptr, 2, 2, 2);
+                printf("Forward system:\n");
+                sys.printf();
+                sys.Reset(inverse_ptr, 2, 2, 2);
+                printf("Inverse system:\n");
+                sys.printf();
+            }
+            if (print_cnt < a)
+                printf("... other 2 x 2 systems omitted ...\n----------------------------------------------------------------\n");
+            else
+                printf("----------------------------------------------------------------\n");
+        }
+    };
 
-    // void printf(const char *s) { printf(s, 2); };
-    // void printf() { printf("", 2); };
+    void printf(const char *s) { printf(s, 2); };
+    void printf() { printf("", 2); };
+#endif
 
     void SkewCongruence(CBLAS_TRANSPOSE trans, REAL_TYPE *MatY, INTE_TYPE ldy, REAL_TYPE *MatX, INTE_TYPE ldx)
     {
@@ -203,18 +205,18 @@ public:
         }
     }
 
-    void Forward(SkewSymmMat &Y, SkewSymmMat &X)
+    void Forward(SkewSymmMat &Y, SkewSymmMat &X, BOOL_TYPE adjoint = false)
     {
         SkewCongruence(CblasTrans, Y.v, d, X.v, d);
-        _dexpSkewSymm_forward_core(Y, Y);
+        _dexpSkewSymm_forward_core(Y, Y, adjoint);
         SkewCongruence(CblasNoTrans, Y.v, d, Y.v, d);
         Y.low2upp();
     }
 
-    void Inverse(SkewSymmMat &Y, SkewSymmMat &X)
+    void Inverse(SkewSymmMat &Y, SkewSymmMat &X, BOOL_TYPE adjoint = false)
     {
         SkewCongruence(CblasTrans, Y.v, d, X.v, d);
-        _dexpSkewSymm_inverse_core(Y, Y);
+        _dexpSkewSymm_inverse_core(Y, Y, adjoint);
         SkewCongruence(CblasNoTrans, Y.v, d, Y.v, d);
         Y.low2upp();
     };

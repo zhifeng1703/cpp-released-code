@@ -158,7 +158,7 @@ extern "C" void DexpSkewSymmPara(double *ParaForward, double *ParaInverse, doubl
 // ===============================================================
 extern "C" void DexpSkewSymmForward(double *MatY, double *MatX,
                                     double *MatR, double *ParaForward,
-                                    int n)
+                                    int n, bool adjoint)
 {
     dexpSkewSymmPara dexp(n);
     SkewSymmMat SSX(n), SSY(n);
@@ -176,7 +176,7 @@ extern "C" void DexpSkewSymmForward(double *MatY, double *MatX,
     SSY.init_low_vec();
     SSX.mat2vec();
 
-    dexp.Forward(SSY, SSX);
+    dexp.Forward(SSY, SSX, adjoint);
 
     dexp._forward_para.v = saved_f;
     dexp.R.v = saved_R;
@@ -189,7 +189,7 @@ extern "C" void DexpSkewSymmForward(double *MatY, double *MatX,
 // ===============================================================
 extern "C" void DexpSkewSymmInverse(double *MatY, double *MatX,
                                     double *MatR, double *ParaInverse,
-                                    int n)
+                                    int n, bool adjoint)
 {
     dexpSkewSymmPara dexp(n);
     SkewSymmMat SSX(n), SSY(n);
@@ -207,7 +207,7 @@ extern "C" void DexpSkewSymmInverse(double *MatY, double *MatX,
     SSY.init_low_vec();
     SSX.mat2vec();
 
-    dexp.Inverse(SSY, SSX);
+    dexp.Inverse(SSY, SSX, adjoint);
 
     dexp._inverse_para.v = saved_i;
     dexp.R.v = saved_R;

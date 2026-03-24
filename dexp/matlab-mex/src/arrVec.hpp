@@ -91,47 +91,49 @@ public:
         d = dim;
     };
 
-    // void fprintf(FILE *of, const char *prefix, INTE_TYPE length, const char *format)
-    // {
-    //     using std::fprintf;
-    //     INTE_TYPE dim = (length < d) ? length : d;
+#ifndef MATLAB_MEX_BUILD
+    void fprintf(FILE *of, const char *prefix, INTE_TYPE length, const char *format)
+    {
+        using std::fprintf;
+        INTE_TYPE dim = (length < d) ? length : d;
 
-    //     fprintf(of, prefix);
-    //     for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
-    //         fprintf(of, format, v[vec_ind]);
-    //     if (length < d)
-    //         fprintf(of, "...\n\n");
-    //     else
-    //         fprintf(of, "\n\n");
-    // };
+        fprintf(of, prefix);
+        for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
+            fprintf(of, format, v[vec_ind]);
+        if (length < d)
+            fprintf(of, "...\n\n");
+        else
+            fprintf(of, "\n\n");
+    };
 
-    // void fprintf(FILE *of, const char *prefix, INTE_TYPE length) { fprintf(of, prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
-    // void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, const char *prefix, INTE_TYPE length) { fprintf(of, prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
+    void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
 
-    // void fprintf(FILE *of, INTE_TYPE length, const char *format) { fprintf(of, "", length, format); };
-    // void fprintf(FILE *of, INTE_TYPE length) { fprintf(of, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of) { fprintf(of, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, INTE_TYPE length, const char *format) { fprintf(of, "", length, format); };
+    void fprintf(FILE *of, INTE_TYPE length) { fprintf(of, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of) { fprintf(of, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
 
-    // void printf(const char *prefix, INTE_TYPE length, const char *format)
-    // {
-    //     using std::printf;
-    //     INTE_TYPE dim = (length < d) ? length : d;
-    //     printf("%s", prefix);
-    //     for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
-    //         printf(format, v[vec_ind]);
-    //     if (length < d)
-    //         printf("...\n\n");
-    //     else
-    //         printf("\n\n");
-    // };
+    void printf(const char *prefix, INTE_TYPE length, const char *format)
+    {
+        using std::printf;
+        INTE_TYPE dim = (length < d) ? length : d;
+        printf("%s", prefix);
+        for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
+            printf(format, v[vec_ind]);
+        if (length < d)
+            printf("...\n\n");
+        else
+            printf("\n\n");
+    };
 
-    // void printf(const char *prefix, INTE_TYPE length) { printf(prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void printf(const char *prefix, const char *format) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
-    // void printf(const char *prefix) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, INTE_TYPE length) { printf(prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, const char *format) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
+    void printf(const char *prefix) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
 
-    // void printf(INTE_TYPE length) { printf("", length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void printf() { printf("", ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void printf(INTE_TYPE length) { printf("", length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void printf() { printf("", ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+#endif
 };
 
 template <class ELEM_TYPE>
@@ -227,45 +229,48 @@ public:
 
     // const access to the entries
 
-    // virtual void fprintf(FILE *of, const char *prefix, INTE_TYPE length, const char *format)
-    // {
-    //     using std::fprintf;
-    //     INTE_TYPE dim = (length < d) ? length : d;
+#ifndef MATLAB_MEX_BUILD
 
-    //     fprintf(of, "%s", prefix);
-    //     for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
-    //         fprintf(of, format, v[vec_ind]);
-    //     if (length < d)
-    //         fprintf(of, "...\n\n");
-    //     else
-    //         fprintf(of, "\n\n");
-    // };
+    virtual void fprintf(FILE *of, const char *prefix, INTE_TYPE length, const char *format)
+    {
+        using std::fprintf;
+        INTE_TYPE dim = (length < d) ? length : d;
 
-    // void fprintf(FILE *of, const char *prefix, INTE_TYPE length) { fprintf(of, prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
-    // void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+        fprintf(of, "%s", prefix);
+        for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
+            fprintf(of, format, v[vec_ind]);
+        if (length < d)
+            fprintf(of, "...\n\n");
+        else
+            fprintf(of, "\n\n");
+    };
 
-    // void fprintf(FILE *of, INTE_TYPE length, const char *format) { fprintf(of, "", length, format); };
-    // void fprintf(FILE *of, INTE_TYPE length) { fprintf(of, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void fprintf(FILE *of) { fprintf(of, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, const char *prefix, INTE_TYPE length) { fprintf(of, prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of, const char *prefix, const char *format) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
+    void fprintf(FILE *of, const char *prefix) { fprintf(of, prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
 
-    // virtual void printf(const char *prefix, INTE_TYPE length, const char *format)
-    // {
-    //     using std::printf;
-    //     INTE_TYPE dim = (length < d) ? length : d;
-    //     printf("%s", prefix);
-    //     for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
-    //         printf(format, v[vec_ind]);
-    //     if (length < d)
-    //         printf("...\n\n");
-    //     else
-    //         printf("\n\n");
-    // };
+    void fprintf(FILE *of, INTE_TYPE length, const char *format) { fprintf(of, "", length, format); };
+    void fprintf(FILE *of, INTE_TYPE length) { fprintf(of, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void fprintf(FILE *of) { fprintf(of, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
 
-    // void printf(const char *prefix, INTE_TYPE length) { printf(prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void printf(const char *prefix, const char *format) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
-    // void printf(const char *prefix) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    virtual void printf(const char *prefix, INTE_TYPE length, const char *format)
+    {
+        using std::printf;
+        INTE_TYPE dim = (length < d) ? length : d;
+        printf("%s", prefix);
+        for (auto vec_ind = 0; vec_ind < dim; vec_ind++)
+            printf(format, v[vec_ind]);
+        if (length < d)
+            printf("...\n\n");
+        else
+            printf("\n\n");
+    };
 
-    // void printf(INTE_TYPE length) { printf("", length, ARRVEC_DEFAULT_PRINT_FORMAT); };
-    // void printf() { printf("", ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, INTE_TYPE length) { printf(prefix, length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void printf(const char *prefix, const char *format) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, format); };
+    void printf(const char *prefix) { printf(prefix, ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+
+    void printf(INTE_TYPE length) { printf("", length, ARRVEC_DEFAULT_PRINT_FORMAT); };
+    void printf() { printf("", ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+#endif
 };

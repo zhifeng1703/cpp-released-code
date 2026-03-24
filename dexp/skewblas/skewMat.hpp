@@ -3,7 +3,12 @@
 #include <cassert>
 #include <cstring>
 
+#ifdef MATLAB_MEX_BUILD
+#include "blasType_mex.hpp"
+#else
 #include "blasType.hpp"
+#endif
+
 #include "lowTriMat.hpp"
 
 class SkewSymmMat : public LowTriMat<REAL_TYPE>

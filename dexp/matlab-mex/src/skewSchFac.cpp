@@ -61,6 +61,21 @@ void SkewSchurFactor::_givens_rotate_cols(INTE_TYPE coli, INTE_TYPE colj, REAL_T
     }
 }
 
+void SkewSchurFactor::_ssf_swap_cols(INTE_TYPE i, INTE_TYPE j)
+{
+    if (i == j)
+        return;
+    memcpy(Work.v, R.v + i * d, sizeof(REAL_TYPE) * d);
+    memcpy(R.v + i * d, R.v + j * d, sizeof(REAL_TYPE) * d);
+    memcpy(R.v + j * d, Work.v, sizeof(REAL_TYPE) * d);
+}
+
+void SkewSchurFactor::_ssf_flip_cols(INTE_TYPE j)
+{
+    for (auto i = 0; i < d; i++)
+        R.v[i + j * d] = -R.v[i + j * d];
+}
+
 void SkewSchurFactor::SchurAngular_SkewSymm()
 {
     // S is stored at H.MatH;
@@ -73,10 +88,6 @@ void SkewSchurFactor::SchurAngular_SkewSymm()
     auto WorkBDC = WorkE + (m - 1);
     auto WorkBDS = WorkBDC + m;
 
-    // auto MatU = ColMat<REAL_TYPE>(m, m), MatVt = ColMat<REAL_TYPE>(k, k);
-    // auto VecD = ArrVec<REAL_TYPE>(m), VecE = ArrVec<REAL_TYPE>(m - 1), VecBDC = ArrVec<REAL_TYPE>(m), VecBDS = ArrVec<REAL_TYPE>(m);
-    // auto WorkD = VecD.v, WorkE = VecE.v, WorkBDC = VecBDC.v, WorkBDS = VecBDS.v, WorkU = MatU.v, WorkVt = MatVt.v;
-
     // WorkE requries m - 1 space
     // WorkBCC requries m space
     // WorkBCS requries m space
@@ -84,8 +95,12 @@ void SkewSchurFactor::SchurAngular_SkewSymm()
     auto S_offdiag_pos = WorkS + 1;
     auto S_offdiag_neg = S_offdiag_pos + d + 1;
 
+    auto VtRow = WorkVt;
+    auto UCol = WorkU;
+    auto scCol = R.v;
+
     H.SkewSymm_TriDiag_BLAS3();
-    // H.SkewSymm_TriDiag_BLAS2(WorkS, n);
+    // _bdh.SkewSymm_TriDiag_BLAS2(WorkS, n);
 
     for (auto blk_ind = 0; blk_ind < m - 1; blk_ind++, S_offdiag_pos += 2 * d + 2, S_offdiag_neg += 2 * d + 2)
     {
@@ -105,13 +120,134 @@ void SkewSchurFactor::SchurAngular_SkewSymm()
 
     LAPACKE_dbdsdc(LAPACK_COL_MAJOR, 'U', 'I', m, WorkD, WorkE, WorkU, m, WorkVt, k, nullptr, nullptr);
 
-    a = m;
-    // for (auto blk_ind = 0; blk_ind < m; blk_ind++)
-    //     a += (abs(WorkD[blk_ind]) > 1e-12);
+    o = (m == k) ? 1 : -1;
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+        o = o * _ssf_sgn(WorkD[blk_ind]);
 
+    a = 0;
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+        a += (abs(WorkD[blk_ind]) > 1e-12);
+
+    a = m; // disable a for accuracy concern in the Stiefel geodesic problem.
     if (m != k)
         for (auto blk_ind = m - 1; blk_ind >= 0; blk_ind--)
             _givens_rotate_cols(m - 1 - blk_ind, m, WorkBDC[blk_ind], WorkBDS[blk_ind], WorkVt, k);
+}
+
+void SkewSchurFactor::Canonical_SchurAngular()
+{
+    if (o == 0)
+        o = _ssf_det(R.v, R.r);
+    const REAL_TYPE two_pi = 2 * M_PI;
+
+    // --------------------------------------------------------
+    // Step 1: copy A to B and pull back to (-pi, pi]
+    // eta_i = floor((A.v[i] + pi)/(2pi))
+    // sigma_i = A.v[i] - 2pi * eta_i
+    // --------------------------------------------------------
+
+    ArrVec<REAL_TYPE> B(m);
+    ArrVec<REAL_TYPE> C(m);
+    auto Av = A.v;
+    auto Bv = B.v;
+    auto Cv = C.v;
+    auto Ev = E.v;
+
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+    {
+        int x = static_cast<int>(std::floor((Av[blk_ind] + M_PI) / two_pi));
+        Ev[blk_ind] = x;
+        Bv[blk_ind] = Av[blk_ind] - two_pi * x;
+
+        // safety against roundoff drift outside (-pi, pi]
+        if (Bv[blk_ind] <= -M_PI)
+        {
+            Bv[blk_ind] += two_pi;
+            Ev[blk_ind] -= 1;
+        }
+        else if (Bv[blk_ind] > M_PI)
+        {
+            Bv[blk_ind] -= two_pi;
+            Ev[blk_ind] += 1;
+        }
+    }
+
+    // --------------------------------------------------------
+    // Step 2: sort blocks by descending |sigma_i|
+    // --------------------------------------------------------
+    std::vector<int> perm(m);
+    for (int blk_ind = 0; blk_ind < m; blk_ind++)
+        perm[blk_ind] = blk_ind;
+
+    std::stable_sort(perm.begin(), perm.end(),
+                     [&](int a, int b)
+                     {
+                         return std::abs(Bv[a]) > std::abs(Bv[b]);
+                     });
+
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+        memcpy(Work.v + 2 * d * blk_ind, R.v + 2 * d * perm[blk_ind], sizeof(REAL_TYPE) * 2 * d);
+    memcpy(R.v, Work.v, sizeof(REAL_TYPE) * 2 * d * m);
+
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+        Cv[blk_ind] = Av[perm[blk_ind]];
+    memcpy(Av, Cv, sizeof(REAL_TYPE) * m);
+
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++)
+        Cv[blk_ind] = Bv[perm[blk_ind]];
+    memcpy(Bv, Cv, sizeof(REAL_TYPE) * m);
+
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++) // INTE to REAL
+        Cv[blk_ind] = Ev[perm[blk_ind]];
+    for (auto blk_ind = 0; blk_ind < m; blk_ind++) // REAL to INTE
+        Ev[blk_ind] = Cv[blk_ind];
+
+    // --------------------------------------------------------
+    // Step 3: if det(R) = -1, flip the first block
+    // (sigma_1, eta_1, V_[1]) <- (-sigma_1, -eta_1, [V_2 V_1])
+    // --------------------------------------------------------
+    if (o == -1 && m > 0)
+    {
+        Bv[0] = -Bv[0];
+        Av[0] = -Av[0];
+        Ev[0] = -Ev[0];
+
+        _ssf_swap_cols(0, 1);
+    }
+
+    // --------------------------------------------------------
+    // Step 4: for i = 0,...,m-2
+    // if sigma_i < 0, flip blocks i and i+1
+    // --------------------------------------------------------
+    for (int blk_ind = 0; blk_ind < m - 1; blk_ind++)
+    {
+        if (Bv[blk_ind] < 0)
+        {
+            Bv[blk_ind] = -Bv[blk_ind];
+            Av[blk_ind] = -Av[blk_ind];
+            Ev[blk_ind] = -Ev[blk_ind];
+            _ssf_swap_cols(2 * blk_ind, 2 * blk_ind + 1);
+
+            Bv[blk_ind + 1] = -Bv[blk_ind + 1];
+            Av[blk_ind + 1] = -Av[blk_ind + 1];
+            Ev[blk_ind + 1] = -Ev[blk_ind + 1];
+            _ssf_swap_cols(2 * blk_ind + 2, 2 * blk_ind + 3);
+        }
+    }
+
+    // --------------------------------------------------------
+    // Step 5: odd case n = 2m+1
+    // if sigma_m < 0, flip last 2x2 block and negate last column
+    // --------------------------------------------------------
+    if (m != k && B[m - 1] < 0)
+    {
+        Bv[m - 1] = -Bv[m - 1];
+        Av[m - 1] = -Av[m - 1];
+        _ssf_swap_cols(2 * m - 2, 2 * m - 1);
+        _ssf_flip_cols(2 * m);
+    }
+
+    o = 1;
 }
 
 void SkewSchurFactor::Explict_Vector(REAL_TYPE *MatR, INTE_TYPE ldr)

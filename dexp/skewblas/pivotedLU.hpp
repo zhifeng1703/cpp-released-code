@@ -69,6 +69,7 @@ public:
     {
         if (!f)
             s = LAPACKE_dgetrf(CblasColMajor, r, c, M.v, r, P.v);
+        f = true;
         return s;
     }
 

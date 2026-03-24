@@ -1,0 +1,12 @@
+/usr/bin/make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/zhifeng1703/programs/SkewSymm'
+ 
+g++ -O3 -DMKL_ILP64  -m64 -I /opt/intel/oneapi/mkl/latest/include -I ./blas_lapack_interface -c dexpSkewSymm.cpp -o dexpSkewSymm.o   
+ 
+g++ -O3 -DMKL_ILP64  -m64 -I /opt/intel/oneapi/mkl/latest/include -I ./blas_lapack_interface -c dexpSemiSimple.cpp -o dexpSemiSimple.o   
+g++ -O3 -DMKL_ILP64  -m64 -I /opt/intel/oneapi/mkl/latest/include -I ./blas_lapack_interface -c main.cpp -o main.o   
+g++ -O3 -DMKL_ILP64  -m64 -I /opt/intel/oneapi/mkl/latest/include -I ./blas_lapack_interface -c dexpPadeApprox.cpp -o dexpPadeApprox.o   
+for dir in blas_lapack_interface; do make -C /home/zhifeng1703/programs/SkewSymm/$dir ||exit; done
+g++ dexpSkewSymm.o dexpSemiSimple.o main.o dexpPadeApprox.o blas_lapack_interface/dgees.o blas_lapack_interface/skewSymmMat.o blas_lapack_interface/daxpy.o blas_lapack_interface/schAngFac.o blas_lapack_interface/matOp.o blas_lapack_interface/vecOp.o blas_lapack_interface/daxpby.o blas_lapack_interface/ddot.o blas_lapack_interface/dlaqtr.o blas_lapack_interface/sylvester.o blas_lapack_interface/hhQrFac.o blas_lapack_interface/dormqr.o blas_lapack_interface/dsyr.o blas_lapack_interface/dtrsyl.o blas_lapack_interface/gmres.o blas_lapack_interface/spectralFac.o blas_lapack_interface/type_convention.o blas_lapack_interface/dgetrs.o blas_lapack_interface/dgemv.o blas_lapack_interface/dsyrk.o blas_lapack_interface/dgetrf.o blas_lapack_interface/dscal.o blas_lapack_interface/dger.o blas_lapack_interface/dgemm.o blas_lapack_interface/dgeqrf.o blas_lapack_interface/dnrm2.o blas_lapack_interface/specOrthMat.o blas_lapack_interface/expmpa.o blas_lapack_interface/zgemm.o blas_lapack_interface/pivotedLUFac.o blas_lapack_interface/lowerTraversal.o blas_lapack_interface/dorgqr.o -o skewsymm  -O3 -m64 -Wl,--start-group /opt/intel/oneapi/mkl/latest/lib/libmkl_intel_ilp64.a /opt/intel/oneapi/mkl/latest/lib/libmkl_sequential.a /opt/intel/oneapi/mkl/latest/lib/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl
+make: Leaving directory '/home/zhifeng1703/programs/SkewSymm'
+ 

@@ -1,4 +1,4 @@
-function [Y, para] = sblas_dexp(S, X, dir, para)
+function [Y, para] = sblas_dexp(S, X, dir, adjoint, para)
 % sblas_dexp  Differential of exp(S) using the sBLAS MEX backend.
 %
 %   [Y, para] = sblas_dexp(S, X, dir, para)
@@ -7,11 +7,12 @@ function [Y, para] = sblas_dexp(S, X, dir, para)
 %     S    : n×n skew-symmetric matrix
 %     X    : n×n skew-symmetric direction
 %     dir  : 'fwd' (default) or 'inv'
+%     adjoint : optional logical flag, default false
 %     para : optional cached structure containing:
 %              .R            – Schur orthogonal matrix
 %              .A            – Schur angles
-%              .ParaFwd      – forward diff parameters
-%              .ParaInv      – inverse diff parameters
+%              .Fwd      – forward diff parameters
+%              .Inv      – inverse diff parameters
 %
 %   Output:
 %     Y    : result of Dexp_S(X) or Dexp_S^{-1}(X)
@@ -21,6 +22,10 @@ function [Y, para] = sblas_dexp(S, X, dir, para)
         dir = 'fwd';
     end
 
+    if nargin < 4 || isempty(adjoint)
+        adjoint = false;
+    end
+
     n = size(S,1);
     a = floor(n/2);
     parvec_size = a*(a-1)*8 + a*4;   % C++ parameter size (real)
@@ -28,7 +33,7 @@ function [Y, para] = sblas_dexp(S, X, dir, para)
     % ---------------------------------------------------------------
     % Compute Schur decomposition and DK parameters if missing
     % ---------------------------------------------------------------
-    need_schur = (nargin < 4) || isempty(para) || ...
+    need_schur = (nargin < 5) || isempty(para) || ...
                  ~isfield(para,'R') || ~isfield(para,'A');
 
     if need_schur
@@ -45,10 +50,10 @@ function [Y, para] = sblas_dexp(S, X, dir, para)
         para.Inv = PI;
     else
         % Validate parameter lengths
-        if ~isfield(para,'Fwd') || numel(para.ParaFwd) ~= parvec_size
+        if ~isfield(para,'Fwd') || numel(para.Fwd) ~= parvec_size
             error('Invalid or missing para.ParaForward.');
         end
-        if ~isfield(para,'Inv') || numel(para.ParaInv) ~= parvec_size
+        if ~isfield(para,'Inv') || numel(para.Inv) ~= parvec_size
             error('Invalid or missing para.ParaInverse.');
         end
     end
@@ -57,8 +62,8 @@ function [Y, para] = sblas_dexp(S, X, dir, para)
     % Call the actual MEX differential
     % ---------------------------------------------------------------
     if startsWith(lower(dir),'i')
-        Y = mex_sblas_dexp(S, X, 'inv', para);
+        Y = mex_sblas_dexp(S, X, 'inv', adjoint, para);
     else
-        Y = mex_sblas_dexp(S, X, 'fwd', para);
+        Y = mex_sblas_dexp(S, X, 'fwd', adjoint, para);
     end
 end

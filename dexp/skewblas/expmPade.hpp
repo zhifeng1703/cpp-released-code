@@ -1,8 +1,10 @@
 #pragma once
 
+#ifndef MATLAB_MEX_BUILD
 #include "mkl.h"
-#include "colMat.hpp"
+#endif
 
+#include "colMat.hpp"
 #include "pivotedLU.hpp"
 
 // This code implements the scaling and squaring method of the matrix exponential proposed in [Higham09].

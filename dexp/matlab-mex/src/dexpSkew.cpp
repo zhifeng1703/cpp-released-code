@@ -4,15 +4,15 @@ void dexpSkewSymmPara::_setup_22_paras(REAL_TYPE *_forward, REAL_TYPE *_inverse,
 {
     REAL_TYPE xpy = x + y;
     REAL_TYPE ymx = y - x;
-    REAL_TYPE a = _dexpSkewSymm_sxdx(ymx);
-    REAL_TYPE b = _dexpSkewSymm_cxdx(ymx);
-    REAL_TYPE c = _dexpSkewSymm_sxdx(xpy);
-    REAL_TYPE d = _dexpSkewSymm_cxdx(xpy);
+    REAL_TYPE _a = _dexpSkewSymm_sxdx(ymx);
+    REAL_TYPE _b = _dexpSkewSymm_cxdx(ymx);
+    REAL_TYPE _c = _dexpSkewSymm_sxdx(xpy);
+    REAL_TYPE _d = _dexpSkewSymm_cxdx(xpy);
 
-    REAL_TYPE apco2 = (a + c) * 0.5;
-    REAL_TYPE amco2 = (a - c) * 0.5;
-    REAL_TYPE bpdo2 = (b + d) * 0.5;
-    REAL_TYPE bmdo2 = (b - d) * 0.5;
+    REAL_TYPE apco2 = (_a + _c) * 0.5;
+    REAL_TYPE amco2 = (_a - _c) * 0.5;
+    REAL_TYPE bpdo2 = (_b + _d) * 0.5;
+    REAL_TYPE bmdo2 = (_b - _d) * 0.5;
 
     REAL_TYPE aprime = _dexpSkewSymm_xctx(ymx * 0.5);
     REAL_TYPE cprime = _dexpSkewSymm_xctx(xpy * 0.5);
@@ -85,9 +85,9 @@ void dexpSkewSymmPara::_set_A(REAL_TYPE *VecA)
     REAL_TYPE *_forward_current = _forward_para.v;
     REAL_TYPE *_inverse_current = _inverse_para.v;
 
-    for (auto blk_col_index = 0; blk_col_index < a; blk_col_index++)
+    for (auto blk_col_index = 0; blk_col_index < d / 2; blk_col_index++)
     {
-        for (auto blk_row_index = blk_col_index + 1; blk_row_index < a; blk_row_index++)
+        for (auto blk_row_index = blk_col_index + 1; blk_row_index < d / 2; blk_row_index++)
         {
             _setup_22_paras(_forward_current, _inverse_current, A[blk_col_index], A[blk_row_index]);
             _forward_current += 16;
@@ -95,7 +95,7 @@ void dexpSkewSymmPara::_set_A(REAL_TYPE *VecA)
         }
     }
 
-    for (auto blk_col_index = 0; blk_col_index < a; blk_col_index++)
+    for (auto blk_col_index = 0; blk_col_index < d / 2; blk_col_index++)
     {
         _setup_12_paras(_forward_current, _inverse_current, A[blk_col_index]);
         _forward_current += 4;
@@ -103,7 +103,7 @@ void dexpSkewSymmPara::_set_A(REAL_TYPE *VecA)
     }
 };
 
-void dexpSkewSymmPara::_dexpSkewSymm_forward_core(REAL_TYPE *lvY, REAL_TYPE *lvX)
+void dexpSkewSymmPara::_dexpSkewSymm_forward_core(REAL_TYPE *lvY, REAL_TYPE *lvX, BOOL_TYPE adjoint)
 {
     // IMPORTANT : This routine can perform inplace update, i.e., it accepts lvX and lvY that are pointing to the same address space.
     // The input lvX and lvY must be in the lower-2x2-block-traversal-order defined by LowerTraversal.hpp::strict_lower_blk_traversal.
@@ -116,11 +116,14 @@ void dexpSkewSymmPara::_dexpSkewSymm_forward_core(REAL_TYPE *lvY, REAL_TYPE *lvX
     REAL_TYPE *x_cur = lvX;
     REAL_TYPE *y_cur = lvY;
     REAL_TYPE *w = Work.v;
+
+    auto adjoint_transpose = adjoint ? CblasTrans : CblasNoTrans;
+
     for (blk_index = 0; blk_index < _22_blk_size; blk_index++)
     {
         // Update on the strict lower 2 x 2 blocks.
-        cblas_dgemv(CblasColMajor, CblasNoTrans, 4, 4, 1.0, A_cur, 4, x_cur, 1, 0.0, w, 1); // work = A * x;
-        memcpy(y_cur, w, 4 * sizeof(REAL_TYPE));                                            // y = work;
+        cblas_dgemv(CblasColMajor, adjoint_transpose, 4, 4, 1.0, A_cur, 4, x_cur, 1, 0.0, w, 1); // work = A * x;
+        memcpy(y_cur, w, 4 * sizeof(REAL_TYPE));                                                 // y = work;
         A_cur += 16;
         x_cur += 4;
         y_cur += 4;
@@ -131,10 +134,10 @@ void dexpSkewSymmPara::_dexpSkewSymm_forward_core(REAL_TYPE *lvY, REAL_TYPE *lvX
         // Odd number of the dimension implies a left-over row.
 
         // Update on 1 x 2 blocks
-        for (blk_index = 0; blk_index < a; blk_index++)
+        for (blk_index = 0; blk_index < d / 2; blk_index++)
         {
-            cblas_dgemv(CblasColMajor, CblasNoTrans, 2, 2, 1.0, A_cur, 2, x_cur, 1, 0.0, w, 1); // work = A * x;
-            memcpy(y_cur, w, 2 * sizeof(REAL_TYPE));                                            // y = work;
+            cblas_dgemv(CblasColMajor, adjoint_transpose, 2, 2, 1.0, A_cur, 2, x_cur, 1, 0.0, w, 1); // work = A * x;
+            memcpy(y_cur, w, 2 * sizeof(REAL_TYPE));                                                 // y = work;
             A_cur += 4;
             x_cur += 2;
             y_cur += 2;
@@ -142,10 +145,10 @@ void dexpSkewSymmPara::_dexpSkewSymm_forward_core(REAL_TYPE *lvY, REAL_TYPE *lvX
     }
 
     // Update on the remaining bottom-left-corner of the diagonal 2 x 2 blocks.
-    memcpy(y_cur, x_cur, a * sizeof(REAL_TYPE));
+    memcpy(y_cur, x_cur, (d / 2) * sizeof(REAL_TYPE));
 };
 
-void dexpSkewSymmPara::_dexpSkewSymm_inverse_core(REAL_TYPE *lvY, REAL_TYPE *lvX)
+void dexpSkewSymmPara::_dexpSkewSymm_inverse_core(REAL_TYPE *lvY, REAL_TYPE *lvX, BOOL_TYPE adjoint)
 {
     // IMPORTANT : This routine can perform inplace update, i.e., it accepts lvX and lvY that are pointing to the same address space.
     // The input lvX and lvY must be in the lower-2x2-block-traversal-order defined by LowerTraversal.hpp::strict_lower_blk_traversal.
@@ -158,11 +161,14 @@ void dexpSkewSymmPara::_dexpSkewSymm_inverse_core(REAL_TYPE *lvY, REAL_TYPE *lvX
     REAL_TYPE *x_cur = lvX;
     REAL_TYPE *y_cur = lvY;
     REAL_TYPE *w = Work.v;
+
+    auto adjoint_transpose = adjoint ? CblasTrans : CblasNoTrans;
+
     for (blk_index = 0; blk_index < _22_blk_size; blk_index++)
     {
         // Update on the strict lower 2 x 2 blocks.
-        cblas_dgemv(CblasColMajor, CblasNoTrans, 4, 4, 1.0, A_cur, 4, x_cur, 1, 0.0, w, 1); // work = A * x;
-        memcpy(y_cur, w, 4 * sizeof(REAL_TYPE));                                            // y = work;
+        cblas_dgemv(CblasColMajor, adjoint_transpose, 4, 4, 1.0, A_cur, 4, x_cur, 1, 0.0, w, 1); // work = A * x;
+        memcpy(y_cur, w, 4 * sizeof(REAL_TYPE));                                                 // y = work;
         A_cur += 16;
         x_cur += 4;
         y_cur += 4;
@@ -173,10 +179,10 @@ void dexpSkewSymmPara::_dexpSkewSymm_inverse_core(REAL_TYPE *lvY, REAL_TYPE *lvX
         // Odd number of the dimension implies a left-over row.
 
         // Update on 1 x 2 blocks
-        for (blk_index = 0; blk_index < a; blk_index++)
+        for (blk_index = 0; blk_index < d / 2; blk_index++)
         {
-            cblas_dgemv(CblasColMajor, CblasNoTrans, 2, 2, 1.0, A_cur, 2, x_cur, 1, 0.0, w, 1); // work = A * x;
-            memcpy(y_cur, w, 2 * sizeof(REAL_TYPE));                                            // y = work;
+            cblas_dgemv(CblasColMajor, adjoint_transpose, 2, 2, 1.0, A_cur, 2, x_cur, 1, 0.0, w, 1); // work = A * x;
+            memcpy(y_cur, w, 2 * sizeof(REAL_TYPE));                                                 // y = work;
             A_cur += 4;
             x_cur += 2;
             y_cur += 2;
@@ -184,21 +190,21 @@ void dexpSkewSymmPara::_dexpSkewSymm_inverse_core(REAL_TYPE *lvY, REAL_TYPE *lvX
     }
 
     // Update on the remaining bottom-left-corner of the diagonal 2 x 2 blocks.
-    memcpy(y_cur, x_cur, a * sizeof(REAL_TYPE));
+    memcpy(y_cur, x_cur, (d / 2) * sizeof(REAL_TYPE));
 };
 
-void dexpSkewSymmPara::_dexpSkewSymm_forward_core(SkewSymmMat &Y, SkewSymmMat &X)
+void dexpSkewSymmPara::_dexpSkewSymm_forward_core(SkewSymmMat &Y, SkewSymmMat &X, BOOL_TYPE adjoint)
 {
     Y.mat2vec(_blk_tra);
     // View_ArrVec<REAL_TYPE>(Y.lv, Y.lsize).printf();s
-    _dexpSkewSymm_forward_core(Y.lv, X.lv);
+    _dexpSkewSymm_forward_core(Y.lv, X.lv, adjoint);
     // View_ArrVec<REAL_TYPE>(Y.lv, Y.lsize).printf();
     Y.vec2mat(_blk_tra);
 };
 
-void dexpSkewSymmPara::_dexpSkewSymm_inverse_core(SkewSymmMat &Y, SkewSymmMat &X)
+void dexpSkewSymmPara::_dexpSkewSymm_inverse_core(SkewSymmMat &Y, SkewSymmMat &X, BOOL_TYPE adjoint)
 {
     Y.mat2vec(_blk_tra);
-    _dexpSkewSymm_inverse_core(Y.lv, X.lv);
+    _dexpSkewSymm_inverse_core(Y.lv, X.lv, adjoint);
     Y.vec2mat(_blk_tra);
 };

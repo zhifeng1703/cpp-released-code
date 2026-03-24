@@ -1,0 +1,863 @@
+/usr/bin/make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Thu Jun  6 22:04:42 2024
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+WSLENV = VSCODE_WSL_EXT_LOCATION/up:VSCODE_SERVER_TAR/up
+# default
+.SHELLFLAGS := -c
+# makefile (from 'makefile', line 36)
+OBJ := dexpSkewSymm.o dexpSemiSimple.o main.o dexpPadeApprox.o
+# makefile (from 'makefile', line 34)
+SRC = $(wildcard *.cpp)
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile
+CURDIR := /home/zhifeng1703/programs/SkewSymm
+# makefile
+SHELL = /bin/sh
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en","osLocale":"en","availableLanguages":{}}
+# environment
+_ = /home/zhifeng1703/.vscode-server/bin/89de5a8d4d6205e5b11647eb6a74844ca23d2573/node
+# makefile (from 'makefile', line 27)
+CFLAGS = $(EXTRA) -DMKL_ILP64  -m64 $(INCDIRS) -c
+# makefile (from 'dexpPadeApprox.d', line 1)
+MAKEFILE_LIST :=  makefile dexpSkewSymm.d dexpSemiSimple.d main.d dexpPadeApprox.d
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+XDG_DATA_DIRS = /usr/local/share:/usr/share:/var/lib/snapd/desktop
+# makefile (from 'makefile', line 22)
+EXTRA = -O3
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_CWD = /mnt/c/Users/frank/AppData/Local/Programs/Microsoft VS Code
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /home/zhifeng1703/.vscode-server/bin/89de5a8d4d6205e5b11647eb6a74844ca23d2573/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/MATLAB/R2021a/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Users/frank/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/frank/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/frank/AppData/Local/GitHubDesktop/bin:/mnt/c/texlive/2020/bin/win32:/mnt/c/Users/frank/AppData/Local/Microsoft/WindowsApps:/mnt/c/cygwin64/bin:/mnt/c/Users/frank/AppData/Local/Programs/Julia-1.9.2/bin:/snap/bin:/home/zhifeng1703/softwares/julia/1.8.2/bin
+# environment
+XDG_RUNTIME_DIR = /mnt/wslg/runtime-dir
+# makefile (from 'makefile', line 39)
+ 
+SUBOBJ := blas_lapack_interface/dgees.o blas_lapack_interface/skewSymmMat.o blas_lapack_interface/daxpy.o blas_lapack_interface/schAngFac.o blas_lapack_interface/matOp.o blas_lapack_interface/vecOp.o blas_lapack_interface/daxpby.o blas_lapack_interface/ddot.o blas_lapack_interface/dlaqtr.o blas_lapack_interface/sylvester.o blas_lapack_interface/hhQrFac.o blas_lapack_interface/dormqr.o blas_lapack_interface/dsyr.o blas_lapack_interface/dtrsyl.o blas_lapack_interface/gmres.o blas_lapack_interface/spectralFac.o blas_lapack_interface/type_convention.o blas_lapack_interface/dgetrs.o blas_lapack_interface/dgemv.o blas_lapack_interface/dsyrk.o blas_lapack_interface/dgetrf.o blas_lapack_interface/dscal.o blas_lapack_interface/dger.o blas_lapack_interface/dgemm.o blas_lapack_interface/dgeqrf.o blas_lapack_interface/dnrm2.o blas_lapack_interface/specOrthMat.o blas_lapack_interface/expmpa.o blas_lapack_interface/zgemm.o blas_lapack_interface/pivotedLUFac.o blas_lapack_interface/lowerTraversal.o blas_lapack_interface/dorgqr.o
+# makefile (from 'makefile', line 15)
+LIBDIRS = $(MKLROOT)/lib
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK_CLI = /mnt/wslg/runtime-dir/vscode-ipc-e9e91225-61bd-41f8-a59c-c28b6f69605d.sock
+# environment
+VSCODE_SERVER_TAR = /mnt/c/Users/frank/AppData/Local/Temp/vscode-remote-wsl/stable/89de5a8d4d6205e5b11647eb6a74844ca23d2573/vscode-server-stable-linux-legacy-x64.tar.gz
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# makefile (from 'makefile', line 38)
+SUBSRC := blas_lapack_interface/dgees.cpp blas_lapack_interface/skewSymmMat.cpp blas_lapack_interface/daxpy.cpp blas_lapack_interface/schAngFac.cpp blas_lapack_interface/matOp.cpp blas_lapack_interface/vecOp.cpp blas_lapack_interface/daxpby.cpp blas_lapack_interface/ddot.cpp blas_lapack_interface/dlaqtr.cpp blas_lapack_interface/sylvester.cpp blas_lapack_interface/hhQrFac.cpp blas_lapack_interface/dormqr.cpp blas_lapack_interface/dsyr.cpp blas_lapack_interface/dtrsyl.cpp blas_lapack_interface/gmres.cpp blas_lapack_interface/spectralFac.cpp blas_lapack_interface/type_convention.cpp blas_lapack_interface/dgetrs.cpp blas_lapack_interface/dgemv.cpp blas_lapack_interface/dsyrk.cpp blas_lapack_interface/dgetrf.cpp blas_lapack_interface/dscal.cpp blas_lapack_interface/dger.cpp blas_lapack_interface/dgemm.cpp blas_lapack_interface/dgeqrf.cpp blas_lapack_interface/dnrm2.cpp blas_lapack_interface/specOrthMat.cpp blas_lapack_interface/expmpa.cpp blas_lapack_interface/zgemm.cpp blas_lapack_interface/pivotedLUFac.cpp blas_lapack_interface/lowerTraversal.cpp blas_lapack_interface/dorgqr.cpp
+# environment
+WSL2_GUI_APPS_ENABLED = 1
+# environment
+PWD = /home/zhifeng1703/programs/SkewSymm
+# default
+.LOADED := 
+# environment
+WSL_INTEROP = /run/WSL/13_interop
+# environment
+PULSE_SERVER = unix:/mnt/wslg/PulseServer
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /home/zhifeng1703
+# makefile (from 'makefile', line 9)
+PRJDIRS := blas_lapack_interface
+# environment
+LD_LIBRARY_PATH = :/opt/intel/oneapi/mkl/2024.0/lib
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+LOGNAME = zhifeng1703
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 0
+# makefile (from 'makefile', line 1)
+CC = g++
+# default
+MAKE_VERSION := 4.2.1
+# environment
+USER = zhifeng1703
+# makefile (from 'makefile', line 12)
+MKLROOT = /opt/intel/oneapi/mkl/latest
+# makefile
+.DEFAULT_GOAL := all
+# environment
+NAME = DESKTOP-3C5Q1V5
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# makefile (from 'makefile', line 26)
+LFLAGS = $(EXTRA) -m64 $(LIBS) -lpthread -lm -ldl
+# makefile (from 'makefile', line 17)
+INCDIRS = -I $(MKLROOT)/include -I $(BLAROOT)
+# environment
+VSCODE_WSL_EXT_LOCATION = /mnt/c/Users/frank/.vscode/extensions/ms-vscode-remote.remote-wsl-0.88.2
+# default
+MAKE_COMMAND := /usr/bin/make
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# makefile
+MAKEFLAGS = pqrR
+# makefile (from 'makefile', line 13)
+BLAROOT = ./blas_lapack_interface
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+VSCODE_L10N_BUNDLE_LOCATION = 
+# makefile (from 'makefile', line 3)
+CURPATH := /home/zhifeng1703/programs/SkewSymm
+# automatic
++F = $(notdir $+)
+# makefile (from 'makefile', line 30)
+target = skewsymm
+# environment
+VSCODE_HANDLES_SIGPIPE = true
+# 'override' directive
+.SHELLSTATUS := 0
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+LC_ALL = C
+# environment
+HOSTTYPE = x86_64
+# makefile (from 'makefile', line 19)
+LIBS = -Wl,--start-group $(LIBDIRS)/libmkl_intel_ilp64.a $(LIBDIRS)/libmkl_sequential.a $(LIBDIRS)/libmkl_core.a -Wl,--end-group
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+WAYLAND_DISPLAY = wayland-0
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# default
+.RECIPEPREFIX := 
+# makefile (from 'makefile', line 4)
+SUBDIRS := /home/zhifeng1703/programs/SkewSymm /home/zhifeng1703/programs/SkewSymm/test /home/zhifeng1703/programs/SkewSymm/.vscode /home/zhifeng1703/programs/SkewSymm/blas_lapack_interface
+# environment
+LANG = C
+# environment
+TERM = xterm-256color
+# environment
+WSL_DISTRO_NAME = Ubuntu
+# environment
+MOTD_SHOWN = update-motd
+# variable set hash-table stats:
+# Load=90/1024=9%, Rehash=0, Collisions=10/157=6%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# blas_lapack_interface (device 2064, inode 57653): 70 files, no impossibilities.
+# . (device 2064, inode 6300): 20 files, no impossibilities.
+
+# 90 files, no impossibilities in 2 directories.
+
+# Implicit Rules
+
+%.o: %.cpp
+#  recipe to execute (from 'makefile', line 46):
+	$(CC) $(CFLAGS) $< -o $@   
+
+%.d: %.cpp
+#  recipe to execute (from 'makefile', line 49):
+	@set -e; rm -f $@; $(CC) $(INCDIRS) -MM $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+# 2 implicit rules, 0 (0.0%) terminal.
+
+# Files
+
+# Not a target:
+blas_lapack_interface/specOrthMat.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-17 21:54:07.986275806
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_compact.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+dexpPadeApprox.o: dexpPadeApprox.cpp dexpPadeApprox.hpp blas_lapack_interface/colMajMat.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/pivotedLUFac.hpp blas_lapack_interface/dgetrf.hpp blas_lapack_interface/dgetrs.hpp blas_lapack_interface/expmpa.hpp blas_lapack_interface/matOp.hpp blas_lapack_interface/dnrm2.hpp blas_lapack_interface/dscal.hpp blas_lapack_interface/dgemm.hpp blas_lapack_interface/dgemv.hpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+blas_lapack_interface/lowerTraversal.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-14 22:45:05.296548923
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_version.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/dnrm2.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-11 23:36:03.577925333
+#  File has been updated.
+#  Successfully updated.
+
+dexpSemiSimple.d: dexpSemiSimple.cpp dexpSemiSimple.cpp dexpSemiSimple.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/zgemm.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'dexpSemiSimple'
+#  Last modified 2024-06-06 22:04:42.253254394
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 49):
+	@set -e; rm -f $@; $(CC) $(INCDIRS) -MM $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+# Not a target:
+dexpSemiSimple.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-03 11:27:41.772293926
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/dscal.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-11 23:36:54.397882193
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/dgetrf.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-06 20:45:37.363778781
+#  File has been updated.
+#  Successfully updated.
+
+all: skewsymm
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/9=0%
+
+# Not a target:
+blas_lapack_interface/spectralFac.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-03 05:50:19.913679338
+#  File has been updated.
+#  Successfully updated.
+
+.PHONY: remake clean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+blas_lapack_interface/dsyrk.hpp:
+#  Implicit rule search has been done.
+ 
+#  Last modified 2024-04-06 20:45:37.483778785
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/lowTriMat.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-14 23:55:51.154536044
+#  File has been updated.
+#  Successfully updated.
+
+remake:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 69):
+	make clean
+	make
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/matOp.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-15 01:28:47.411814687
+#  File has been updated.
+#  Successfully updated.
+
+rebuild: dexpSkewSymm.cpp dexpSemiSimple.cpp main.cpp dexpPadeApprox.cpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 63):
+	rm -rf $(target)
+	@for dir in ${PRJDIRS}; do make -C $(CURPATH)/$$dir ||exit; done
+	$(CC) $(OBJ) $(SUBOBJ) -o $(target)  $(LFLAGS)
+
+# Not a target:
+blas_lapack_interface/dger.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-06 20:45:37.733778793
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-03 23:54:36.176827606
+#  File has been updated.
+#  Successfully updated.
+
+dexpSemiSimple.o: dexpSemiSimple.cpp dexpSemiSimple.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/zgemm.hpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+main.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-05 02:01:42.589200769
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_df.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_rci.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_service.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+dexpSkewSymm.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-05-23 09:19:51.720905662
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+skewsymm: dexpSkewSymm.o dexpSemiSimple.o main.o dexpPadeApprox.o
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/9=0%
+#  recipe to execute (from 'makefile', line 56):
+	@for dir in ${PRJDIRS}; do make -C $(CURPATH)/$$dir ||exit; done
+	$(CC) $^ $(SUBOBJ) -o $@  $(LFLAGS)
+
+lib:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 60):
+	@for dir in ${PRJDIRS}; do make -C $(CURPATH)/$$dir ||exit; done
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vsl.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+main.d: main.cpp main.cpp blas_lapack_interface/dgemm.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/matOp.hpp blas_lapack_interface/dnrm2.hpp blas_lapack_interface/dscal.hpp blas_lapack_interface/dgemv.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/dger.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/specOrthMat.hpp blas_lapack_interface/expmpa.hpp blas_lapack_interface/pivotedLUFac.hpp blas_lapack_interface/dgetrf.hpp blas_lapack_interface/dgetrs.hpp dexpSkewSymm.hpp dexpSemiSimple.hpp blas_lapack_interface/zgemm.hpp dexpPadeApprox.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'main'
+#  Last modified 2024-06-06 22:04:42.103254398
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 49):
+	@set -e; rm -f $@; $(CC) $(INCDIRS) -MM $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_types.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+dexpSkewSymm.d: dexpSkewSymm.cpp dexpSkewSymm.cpp dexpSkewSymm.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/dgemm.hpp blas_lapack_interface/dgemv.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'dexpSkewSymm'
+#  Last modified 2024-06-06 22:04:42.403254391
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 49):
+	@set -e; rm -f $@; $(CC) $(INCDIRS) -MM $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+# Not a target:
+dexpSkewSymm.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-05-23 09:19:51.730905658
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vml.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/pivotedLUFac.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-12 04:08:40.790777799
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_dfti.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+dexpPadeApprox.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-04 04:17:27.910840437
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/expmpa.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-19 11:29:25.486800258
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/colMajMat.hpp:
+#  Implicit rule search has been done.
+ 
+#  Last modified 2024-04-20 06:09:17.514606558
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_trans.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+clean:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 75):
+	@for dir in ${PRJDIRS}; do make -C $(CURPATH)/$$dir clean ||exit; done
+	rm -rf $(target) *.o *.d *.d.*
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/dgemv.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-06 20:45:37.233778777
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_cblas.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+dexpPadeApprox.d: dexpPadeApprox.cpp dexpPadeApprox.cpp dexpPadeApprox.hpp blas_lapack_interface/colMajMat.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/pivotedLUFac.hpp blas_lapack_interface/dgetrf.hpp blas_lapack_interface/dgetrs.hpp blas_lapack_interface/expmpa.hpp blas_lapack_interface/matOp.hpp blas_lapack_interface/dnrm2.hpp blas_lapack_interface/dscal.hpp blas_lapack_interface/dgemm.hpp blas_lapack_interface/dgemv.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'dexpPadeApprox'
+#  Last modified 2024-06-06 22:04:41.863254404
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'makefile', line 49):
+	@set -e; rm -f $@; $(CC) $(INCDIRS) -MM $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+# Not a target:
+dexpPadeApprox.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-04 04:07:13.611097543
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/schAngFac.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-02 13:20:36.848785447
+#  File has been updated.
+#  Successfully updated.
+
+main.o: main.cpp blas_lapack_interface/dgemm.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/matOp.hpp blas_lapack_interface/dnrm2.hpp blas_lapack_interface/dscal.hpp blas_lapack_interface/dgemv.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/dger.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/specOrthMat.hpp blas_lapack_interface/expmpa.hpp blas_lapack_interface/pivotedLUFac.hpp blas_lapack_interface/dgetrf.hpp blas_lapack_interface/dgetrs.hpp dexpSkewSymm.hpp dexpSemiSimple.hpp blas_lapack_interface/zgemm.hpp dexpPadeApprox.hpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_dss.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/dgetrs.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-06 20:45:37.513778786
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/type_convention.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-02 13:50:58.887771468
+#  File has been updated.
+#  Successfully updated.
+
+dexpSkewSymm.o: dexpSkewSymm.cpp dexpSkewSymm.cpp dexpSkewSymm.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/dgemm.hpp blas_lapack_interface/dgemv.hpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'dexpSkewSymm'
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := dexpSkewSymm.o
+# automatic
+# % := 
+# automatic
+# * := dexpSkewSymm
+# automatic
+# + := dexpSkewSymm.cpp dexpSkewSymm.cpp dexpSkewSymm.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/dgemm.hpp blas_lapack_interface/dgemv.hpp
+# automatic
+# | := 
+# automatic
+# < := dexpSkewSymm.cpp
+# automatic
+# ^ := dexpSkewSymm.cpp dexpSkewSymm.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/dgemm.hpp blas_lapack_interface/dgemv.hpp
+# automatic
+# ? := dexpSkewSymm.cpp dexpSkewSymm.hpp blas_lapack_interface/schAngFac.hpp blas_lapack_interface/type_convention.hpp /opt/intel/oneapi/mkl/latest/include/mkl_types.h blas_lapack_interface/dger.hpp /opt/intel/oneapi/mkl/latest/include/mkl.h /opt/intel/oneapi/mkl/latest/include/mkl_version.h /opt/intel/oneapi/mkl/latest/include/mkl_blas.h /opt/intel/oneapi/mkl/latest/include/mkl_blas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_trans.h /opt/intel/oneapi/mkl/latest/include/mkl_trans_names.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas.h /opt/intel/oneapi/mkl/latest/include/mkl_cblas_64.h /opt/intel/oneapi/mkl/latest/include/mkl_spblas.h /opt/intel/oneapi/mkl/latest/include/mkl_lapack.h /opt/intel/oneapi/mkl/latest/include/mkl_lapacke.h /opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h /opt/intel/oneapi/mkl/latest/include/mkl_dss.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_handle.h /opt/intel/oneapi/mkl/latest/include/mkl_rci.h /opt/intel/oneapi/mkl/latest/include/mkl_service.h /opt/intel/oneapi/mkl/latest/include/mkl_vml.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_types.h /opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions_64.h /opt/intel/oneapi/mkl/latest/include/mkl_df.h /opt/intel/oneapi/mkl/latest/include/mkl_df_defines.h /opt/intel/oneapi/mkl/latest/include/mkl_df_functions.h /opt/intel/oneapi/mkl/latest/include/mkl_df_types.h /opt/intel/oneapi/mkl/latest/include/mkl_dfti.h /opt/intel/oneapi/mkl/latest/include/mkl_trig_transforms.h /opt/intel/oneapi/mkl/latest/include/mkl_poisson.h /opt/intel/oneapi/mkl/latest/include/mkl_solvers_ee.h /opt/intel/oneapi/mkl/latest/include/mkl_direct_call.h /opt/intel/oneapi/mkl/latest/include/mkl_compact.h /opt/intel/oneapi/mkl/latest/include/mkl_sparse_qr.h blas_lapack_interface/colMajMat.hpp blas_lapack_interface/dsyr.hpp blas_lapack_interface/dsyrk.hpp blas_lapack_interface/dgees.hpp blas_lapack_interface/skewSymmMat.hpp blas_lapack_interface/lowTriMat.hpp blas_lapack_interface/lowerTraversal.hpp blas_lapack_interface/spectralFac.hpp blas_lapack_interface/dgemm.hpp blas_lapack_interface/dgemv.hpp
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=2/19=11%
+#  recipe to execute (from 'makefile', line 46):
+	$(CC) $(CFLAGS) $< -o $@   
+
+# Not a target:
+blas_lapack_interface/dgees.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-15 06:10:53.583766813
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_df_types.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vsl_functions.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/skewSymmMat.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-06-03 05:43:04.703911222
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_spblas.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+dexpSemiSimple.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-05-23 09:19:51.690905669
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/dgemm.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-06 20:45:37.353778781
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_lapack.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_pardiso.h:
+#  Implicit rule search has been done.
+ 
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/zgemm.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-06 20:45:37.303778779
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_poisson.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+blas_lapack_interface/dsyr.hpp:
+#  Implicit rule search has been done.
+#  Last modified 2024-04-06 20:45:37.543778787
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_vml_functions.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+/opt/intel/oneapi/mkl/latest/include/mkl_blas.h:
+#  Implicit rule search has been done.
+#  Last modified 2023-10-26 14:59:32
+#  File has been updated.
+#  Successfully updated.
+
+# files hash-table stats:
+# Load=84/1024=8%, Rehash=0, Collisions=20/357=6%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 168 / storage = 3973 B / avg = 23 B
+# current buf: size = 8162 B / used = 3973 B / count = 168 / avg = 23 B
+
+# strcache performance: lookups = 399 / hit rate = 57%
+# hash-table stats:
+# Load=168/8192=2%, Rehash=0, Collisions=2/399=1%
+# Finished Make data base on Thu Jun  6 22:04:42 2024
+
+ 

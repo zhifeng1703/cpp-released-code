@@ -81,7 +81,7 @@ public:
 		for (auto ind = 0; ind < external_ssf.a; ind++)
 			if (abs(external_ssf.A[ind]) > norm)
 				norm = abs(external_ssf.A[ind]);
-		printf("Distance to the reference\t %f:\n", norm);
+		// printf("Distance to the reference\t %f:\n", norm);
 		return norm;
 	}
 

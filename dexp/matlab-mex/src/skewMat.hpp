@@ -8,6 +8,7 @@
 #else
 #include "blasType.hpp"
 #endif
+
 #include "lowTriMat.hpp"
 
 class SkewSymmMat : public LowTriMat<REAL_TYPE>

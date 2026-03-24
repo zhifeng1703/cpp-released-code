@@ -7,7 +7,11 @@
 #include <algorithm>
 #include <random>
 
+#ifdef MATLAB_MEX_BUILD
+#include "blasType_mex.hpp"
+#else
 #include "blasType.hpp"
+#endif
 
 #define COLMAT_DEFAULT_PRINT_COUNT 10
 #define COLMAT_DEFAULT_PRINT_FORMAT "%1.3f\t"
@@ -111,6 +115,7 @@ public:
     // It is very important to note that the (deep) copy operator of the View object is NOT called in the copy constructor
     // as this object MUST be an shallow object that does not own or operate any data unless specifically instructed.
 
+#ifndef MATLAB_MEX_BUILD
     void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
     {
         using std::fprintf;
@@ -164,6 +169,8 @@ public:
     void printf(const char *prefix) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
     void printf(INTE_TYPE row_limit, INTE_TYPE col_limit) { printf("", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
     void printf() { printf("", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+
+#endif
 
     void Ones()
     {
@@ -315,7 +322,7 @@ public:
             ELEM_TYPE *des_col = des;
             ELEM_TYPE *src_col = this->v;
             for (auto col_ind = 0; col_ind < cd; col_ind++, src_col += r, des_col += ldd)
-                memcpy(src_col, des_col, sizeof(ELEM_TYPE) * rd);
+                memcpy(des_col, src_col, sizeof(ELEM_TYPE) * rd);
         }
     };
     void Copyto(const SELF_TYPE &des) { Copyto(des.v, des.r, des.r, des.c); };
@@ -334,7 +341,7 @@ public:
 
     // It is very important to note that the (deep) copy operator of the View object is NOT called in the copy constructor
     // as this object MUST be an shallow object that does not own or operate any data unless specifically instructed.
-
+#ifndef MATLAB_MEX_BUILD
     void fprintf(FILE *of, const char *prefix, INTE_TYPE row_limit, INTE_TYPE col_limit, const char *format)
     {
         using std::fprintf;
@@ -388,6 +395,7 @@ public:
     void printf(const char *prefix) { printf(prefix, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
     void printf(INTE_TYPE row_limit, INTE_TYPE col_limit) { printf("", row_limit, col_limit, COLMAT_DEFAULT_PRINT_FORMAT); };
     void printf() { printf("", COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_COUNT, COLMAT_DEFAULT_PRINT_FORMAT); };
+#endif
 
     void Ones()
     {

@@ -7,11 +7,17 @@
 #include <algorithm>
 #include <random>
 
+#ifdef MATLAB_MEX_BUILD
+#include "blasType_mex.hpp"
+#else
 #include "blasType.hpp"
+#endif
 // #include "mkl.h"
 
-#define ARRVEC_DEFAULT_PRINT_COUNT 10
 #define ARRVEC_DEFAULT_PRINT_FORMAT "%1.3f\t"
+#ifndef ARRVEC_DEFAULT_PRINT_COUNT
+#define ARRVEC_DEFAULT_PRINT_COUNT 10
+#endif
 
 template <class ELEM_TYPE>
 class View_ArrVec
@@ -85,6 +91,7 @@ public:
         d = dim;
     };
 
+#ifndef MATLAB_MEX_BUILD
     void fprintf(FILE *of, const char *prefix, INTE_TYPE length, const char *format)
     {
         using std::fprintf;
@@ -126,6 +133,7 @@ public:
 
     void printf(INTE_TYPE length) { printf("", length, ARRVEC_DEFAULT_PRINT_FORMAT); };
     void printf() { printf("", ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+#endif
 };
 
 template <class ELEM_TYPE>
@@ -180,13 +188,13 @@ public:
 
     void Assign(ELEM_TYPE *src, INTE_TYPE n) { memcpy(this->v, src, sizeof(ELEM_TYPE) * n); };
     void Assign(ELEM_TYPE *src) { memcpy(this->v, src, sizeof(ELEM_TYPE) * this->d); };
-    void Assign(const ArrVec<REAL_TYPE> &src) { memcpy(this->v, src.v, sizeof(ELEM_TYPE) * src.d); };
-    void Assign(const View_ArrVec<REAL_TYPE> &src) { memcpy(this->v, src.v, sizeof(ELEM_TYPE) * src.d); };
+    void Assign(const ArrVec<ELEM_TYPE> &src) { memcpy(this->v, src.v, sizeof(ELEM_TYPE) * src.d); };
+    void Assign(const View_ArrVec<ELEM_TYPE> &src) { memcpy(this->v, src.v, sizeof(ELEM_TYPE) * src.d); };
 
     void Copyto(ELEM_TYPE *des, INTE_TYPE n) { memcpy(des, this->v, sizeof(ELEM_TYPE) * n); };
     void Copyto(ELEM_TYPE *des) { Copyto(des, d); };
-    void Copyto(const ArrVec<REAL_TYPE> &des) { memcpy(des.v, this->v, sizeof(ELEM_TYPE) * this->d); };
-    void Copyto(const View_ArrVec<REAL_TYPE> &des) { memcpy(des.v, this->v, sizeof(ELEM_TYPE) * this->d); };
+    void Copyto(const ArrVec<ELEM_TYPE> &des) { memcpy(des.v, this->v, sizeof(ELEM_TYPE) * this->d); };
+    void Copyto(const View_ArrVec<ELEM_TYPE> &des) { memcpy(des.v, this->v, sizeof(ELEM_TYPE) * this->d); };
 
     ELEM_TYPE &operator()(INTE_TYPE i) { return *(v + i); };
     ELEM_TYPE &operator[](INTE_TYPE i) { return *(v + i); };
@@ -214,12 +222,14 @@ public:
     void Zero() { this->Zero(d); };
 
     template <class random_engine>
-    void Rand(random_engine &engine, ELEM_TYPE a, ELEM_TYPE b) { this->Rand(engine, a, b); };
+    void Rand(random_engine &engine, ELEM_TYPE a, ELEM_TYPE b) { this->Rand(d, engine, a, b); };
 
     ELEM_TYPE &cstele(INTE_TYPE i) const { return *(v + i); };
     ELEM_TYPE *cstptr(INTE_TYPE i) const { return v + i; };
 
     // const access to the entries
+
+#ifndef MATLAB_MEX_BUILD
 
     virtual void fprintf(FILE *of, const char *prefix, INTE_TYPE length, const char *format)
     {
@@ -262,4 +272,5 @@ public:
 
     void printf(INTE_TYPE length) { printf("", length, ARRVEC_DEFAULT_PRINT_FORMAT); };
     void printf() { printf("", ARRVEC_DEFAULT_PRINT_COUNT, ARRVEC_DEFAULT_PRINT_FORMAT); };
+#endif
 };
