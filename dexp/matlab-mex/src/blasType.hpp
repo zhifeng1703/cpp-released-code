@@ -11,6 +11,8 @@
 #define CMPX_TYPE MKL_Complex16
 #define CHAR_TYPE char
 
+#define SBLAS_ZERO 1e-14
+
 inline REAL_TYPE normofCMPX(const CMPX_TYPE &c)
 {
     return sqrt(c.real * c.real + c.imag * c.imag);
@@ -76,9 +78,9 @@ inline void exponeCMPX(CMPX_TYPE &y, const CMPX_TYPE &x)
 
 inline void expm1divCMPX(CMPX_TYPE &res, const CMPX_TYPE &z)
 {
-    const double tol = 1e-8;
+    // const double tol = 1e-8;
     double r2 = z.real * z.real + z.imag * z.imag;
-    if (r2 < tol * tol)
+    if (r2 < SBLAS_ZERO)
     {
         // series expansion up to z^2
         CMPX_TYPE term;

@@ -126,7 +126,7 @@ void SkewSchurFactor::SchurAngular_SkewSymm()
 
     a = 0;
     for (auto blk_ind = 0; blk_ind < m; blk_ind++)
-        a += (abs(WorkD[blk_ind]) > 1e-12);
+        a += (abs(WorkD[blk_ind]) > SBLAS_ZERO);
 
     a = m; // disable a for accuracy concern in the Stiefel geodesic problem.
     if (m != k)

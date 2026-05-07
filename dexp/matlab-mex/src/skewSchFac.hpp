@@ -6,8 +6,6 @@
 #include "skewMat.hpp"
 #include "mmlt.hpp"
 
-#define zero_angle 1e-12
-
 class SkewSchurFactor
 {
     typedef SkewSchurFactor SELF_TYPE;
@@ -108,14 +106,14 @@ public:
         a = 0;
         for (auto blk_ind = 0; blk_ind < m; blk_ind++, _col_r += 2 * ldr)
             for (auto row_ind = 0; row_ind < d; row_ind++)
-                if (abs(_col_r[row_ind]) > 1e-10)
+                if (abs(_col_r[row_ind]) > SBLAS_ZERO)
                 {
                     _sin = A[blk_ind];
                     _vec = cblas_ddot(d, MatQ + row_ind, ldq, _col_r, 1) - _sin * _col_r[row_ind + d];
                     _cos = std::copysign(sqrt(1 - _sin * _sin), _vec / _col_r[row_ind]);
                     // std::printf("\nsine: %1.8e,\t cosine: %1.8e, \t entry 1: %1.8e, \t entry 2: %1.8e\n", _sin, _cos, _vec, _col_r[row_ind]);
                     A[blk_ind] = atan2(_sin, _cos);
-                    a += (abs(A[blk_ind]) > 1e-12);
+                    a += (abs(A[blk_ind]) > SBLAS_ZERO);
                     break;
                 }
 
@@ -164,7 +162,7 @@ public:
             Factor_SpecOrth(MatM, ldm);
     };
 
-    inline INTE_TYPE _ssf_sgn(REAL_TYPE val) { return (std::abs(val) < zero_angle) ? 0 : (0 < val) - (val < 0); };
+    inline INTE_TYPE _ssf_sgn(REAL_TYPE val) { return (std::abs(val) < SBLAS_ZERO) ? 0 : (0 < val) - (val < 0); };
     INTE_TYPE _ssf_det(REAL_TYPE *Q, INTE_TYPE ldq)
     {
         if (d == 0)

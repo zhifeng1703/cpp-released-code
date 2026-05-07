@@ -100,7 +100,7 @@ void HouseholderMatrix::_SkewSymm_Hessenberg_VT(REAL_TYPE *MatV, INTE_TYPE ldv, 
     for (INTE_TYPE col_ind = 0; col_ind < col_num; col_ind++, MatS += lds + 1, MatV += ldv + 1, reduced_dim--)
     {
         tau = col_elimin(MatV + 1, MatS + 1, reduced_dim);
-        if (abs(tau) > 1e-12)
+        if (abs(tau) > SBLAS_ZERO)
         {
             cblas_dgemv(CblasColMajor, CblasNoTrans, reduced_dim, reduced_dim, tau, MatS + lds + 1, lds, MatV + 1, 1, 0.0, VecT + col_ind, 1);
             alpha = -0.5 * tau * cblas_ddot(reduced_dim, VecT + col_ind, 1, MatV + 1, 1);

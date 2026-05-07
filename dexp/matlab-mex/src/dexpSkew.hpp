@@ -104,9 +104,9 @@ public:
     void Parameter(const SkewSchurFactor &SSF) { this->Parameter(SSF.R.v, d, SSF.A.v); };
     void Parameter(ColMat<REAL_TYPE> &MatQ, ArrVec<REAL_TYPE> &VecA) { this->Parameter(MatQ.v, d, VecA.v); };
 
-    REAL_TYPE _dexpSkewSymm_sxdx(REAL_TYPE x) { return ((x < 1e-15) && (x > -1e-15)) ? (1.0 - x * x / 6.0) : sin(x) / x; };
-    REAL_TYPE _dexpSkewSymm_cxdx(REAL_TYPE x) { return ((x < 1e-15) && (x > -1e-15)) ? (-x * 0.5) : (cos(x) - 1.0) / x; };
-    REAL_TYPE _dexpSkewSymm_xctx(REAL_TYPE x) { return ((x < 1e-15) && (x > -1e-15)) ? 3.0 / (3.0 - x * x) : x / tan(x); };
+    REAL_TYPE _dexpSkewSymm_sxdx(REAL_TYPE x) { return ((x < SBLAS_ZERO) && (x > -SBLAS_ZERO)) ? (1.0 - x * x / 6.0) : sin(x) / x; };
+    REAL_TYPE _dexpSkewSymm_cxdx(REAL_TYPE x) { return ((x < SBLAS_ZERO) && (x > -SBLAS_ZERO)) ? (-x * 0.5) : (cos(x) - 1.0) / x; };
+    REAL_TYPE _dexpSkewSymm_xctx(REAL_TYPE x) { return ((x < SBLAS_ZERO) && (x > -SBLAS_ZERO)) ? 3.0 / (3.0 - x * x) : x / tan(x); };
 
     void _setup_22_paras(REAL_TYPE *_forward, REAL_TYPE *_inverse, REAL_TYPE x, REAL_TYPE y);
     void _setup_12_paras(REAL_TYPE *_forward, REAL_TYPE *_inverse, REAL_TYPE x);

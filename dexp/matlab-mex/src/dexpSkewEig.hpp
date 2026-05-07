@@ -111,7 +111,7 @@ public:
             {
                 // diff =  val[col_ind] - val[row_ind];
                 substrCMPX(diff, _val[col_ind], _val[row_ind]);
-                if (normofCMPX(diff) < 1e-14)
+                if (normofCMPX(diff) < SBLAS_ZERO)
                     assignCMPX(_forward[mat_ind], 1.0, 0.0);
                 else
                 {
@@ -200,12 +200,12 @@ public:
                 substrCMPX(diff, _val[col_ind], _val[row_ind]);
                 diffnorm = normofCMPX(diff);
 
-                if (diffnorm < 1e-14)
+                if (diffnorm < SBLAS_ZERO)
                 {
                     // diagonal: e^{λ_i}
                     assignCMPX(_forward[mat_ind], eval_exp[col_ind]);
                 }
-                else if (diffnorm < 1e-8)
+                else if (diffnorm < SBLAS_ZERO)
                 {
                     // small δ expansion: e^{λ_j}(1 + δ/2 + δ²/6)
                     multifCMPX(diff2, diff, diff); // δ²

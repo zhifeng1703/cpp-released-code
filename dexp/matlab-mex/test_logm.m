@@ -78,9 +78,9 @@ function [elapsed, errors, fig_elapsed, fig_error] = test_logm_data(dims, opts)
         % ------------------------------------------------------------
         T0 = 2 * rand(n) - 1;
         T0 = 0.5 * (T0 - T0');
-        Qs = expm(T0);
-        S  = mex_sblas_logm(Qs);
-
+        %Qs = expm(T0);
+        %S  = mex_sblas_logm(Qs);
+        S = (pi / norm(T0, 2)) * T0;
         % ------------------------------------------------------------
         % Build random special orthogonal target Q
         % ------------------------------------------------------------
@@ -113,7 +113,7 @@ function [elapsed, errors] = elap_err_logm(n, Q, S, opt)
     end
     if nargin < 3
         T0 = rand(n); T0 = 0.5 * (T0 - T0');
-        S = mex_sblas_logm(expm(T0));
+        S = (pi / norm(T0, 2)) * T0;
     end
     if nargin < 4
         opt = struct();
@@ -128,9 +128,9 @@ function [elapsed, errors] = elap_err_logm(n, Q, S, opt)
     % (1) built-in real(logm(Q))
     % ------------------------------------------------------------
     tic;
-    X_builtin = real(logm(Q));
-    X_builtin = (X_builtin - X_builtin')/2;
+    X_builtin = logm(Q);
     elapsed(1) = toc;
+    X_builtin = real(X_builtin - X_builtin')/2;
 
     % ------------------------------------------------------------
     % (2) principal logarithm
@@ -174,52 +174,57 @@ function [elapsed, errors] = elap_err_logm(n, Q, S, opt)
     end
 end
 
-
 function [fig_elapsed, fig_error] = logm_fig(dims, elapsed, errors, opts)
     if nargin < 4, opts = struct(); end
     if ~isfield(opts, 'savefig'), opts.savefig = true; end
 
-    fig = figure('Color', 'w');
-    tiledlayout(2,1, 'TileSpacing', 'compact', 'Padding', 'compact');
+    labels_time = {'built-in logm', ...
+                   'diffeomorphic logm (unknown shift)', ...
+                   'diffeomorphic logm (known shift)'};
 
-    % ------------------------------------------------------------
-    % Timing figure
-    % ------------------------------------------------------------
-    nexttile;
+    labels_error = {'built-in logm', 'Schur-based logm'};
+
+    fig_elapsed = figure('Color', 'w', 'Units', 'inches', ...
+        'Position', [1 1 5 5], 'PaperUnits', 'inches', ...
+        'PaperPosition', [0 0 5 5], 'PaperSize', [5 5]);
+
     plot(dims, elapsed(:,1), '-o', 'LineWidth', 1.2, 'MarkerSize', 4); hold on;
-    plot(dims, elapsed(:,2), '-s', 'LineWidth', 1.2, 'MarkerSize', 4);
     plot(dims, elapsed(:,3), '-^', 'LineWidth', 1.2, 'MarkerSize', 4);
     plot(dims, elapsed(:,4), '-d', 'LineWidth', 1.2, 'MarkerSize', 4);
     grid on;
     xlabel('dimension n');
     ylabel('time (s)');
     title('Elapsed time for logarithm computations');
-    legend({'built-in real(logm)', 'sblas_logm', ...
-            'sblas_diffeo_logm', 'sblas_spdiff_logm'}, ...
-            'Interpreter', 'none', 'Location', 'northwest');
+    legend(labels_time, 'Interpreter', 'none', 'Location', 'northwest');
 
-    fig_elapsed = gca;
+    fig_error = figure('Color', 'w', 'Units', 'inches', ...
+        'Position', [1 1 5 5], 'PaperUnits', 'inches', ...
+        'PaperPosition', [0 0 5 5], 'PaperSize', [5 5]);
 
-    % ------------------------------------------------------------
-    % Error figure
-    % ------------------------------------------------------------
-    nexttile;
     semilogy(dims, errors(:,1), '-o', 'LineWidth', 1.2, 'MarkerSize', 4); hold on;
     semilogy(dims, errors(:,2), '-s', 'LineWidth', 1.2, 'MarkerSize', 4);
-    semilogy(dims, errors(:,3), '-^', 'LineWidth', 1.2, 'MarkerSize', 4);
-    semilogy(dims, errors(:,4), '-d', 'LineWidth', 1.2, 'MarkerSize', 4);
     grid on;
     xlabel('dimension n');
     ylabel('reconstruction error');
     title('Reconstruction error: ||Q - expm(X)||_F');
-    legend({'built-in real(logm)', 'sblas_logm', ...
-            'sblas_diffeo_logm', 'sblas_spdiff_logm'}, ...
-            'Interpreter', 'none', 'Location', 'southoutside');
+    legend(labels_error, 'Interpreter', 'none', 'Location', 'northwest');
 
-    fig_error = gca;
+    T_elapsed = array2table([dims(:), elapsed], ...
+        'VariableNames', {'n', ...
+                          'builtin_logm', ...
+                          'schur_based_logm', ...
+                          'diffeomorphic_logm_unknown_D_component', ...
+                          'diffeomorphic_logm_known_D_component'});
+
+    T_error = array2table([dims(:), errors(:,1), errors(:,2)], ...
+        'VariableNames', {'n', ...
+                          'builtin_logm', ...
+                          'schur_based_logm'});
 
     if opts.savefig
-        saveas(fig, 'test_logm.png');
-        savefig(fig, 'test_logm.fig');
+        exportgraphics(fig_elapsed, 'logm_elapsed.pdf', 'ContentType', 'vector');
+        exportgraphics(fig_error, 'logm_error.pdf', 'ContentType', 'vector');
+        writetable(T_elapsed, 'test_logm_elapsed.csv');
+        writetable(T_error, 'test_logm_error.csv');
     end
 end
