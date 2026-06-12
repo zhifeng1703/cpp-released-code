@@ -224,56 +224,68 @@ function [fig_elapsed, fig_error] = logm_fig(dims, elapsed, errors, angle_gaps, 
                    'diffeomorphic logm (unknown shift)', ...
                    'diffeomorphic logm (known shift)'};
     
-    labels_error = {'built-in logm', 'Schur-based logm', 'minimal gap of eigenvalues'};
+    labels_error = {'built-in logm', 'Schur-based logm'};
     
     % Create index for markers (every Nth point)
     marker_idx = 1:opts.markevery:length(dims);
     
+    % fig_elapsed = figure('Color', 'w', 'Units', 'inches', ...
+    %     'Position', [1 1 5 5], 'PaperUnits', 'inches', ...
+    %     'PaperPosition', [0 0 5 5], 'PaperSize', [5 5]);
+
     fig_elapsed = figure('Color', 'w', 'Units', 'inches', ...
-        'Position', [1 1 5 5], 'PaperUnits', 'inches', ...
-        'PaperPosition', [0 0 5 5], 'PaperSize', [5 5]);
+    'Position', [1 1 5.0 3.4], ...
+    'PaperUnits', 'inches', ...
+    'PaperPosition', [0 0 5.0 3.4], ...
+    'PaperSize', [5.0 3.4]);
     
     % Plot with full lines but markers only at sampled points
-    plot(dims, elapsed(:,1), '-', 'LineWidth', 1.2); hold on;
-    plot(dims, elapsed(:,3), '-', 'LineWidth', 1.2);
-    plot(dims, elapsed(:,4), '-', 'LineWidth', 1.2);
+    plot(dims, elapsed(:,1), '-o', 'LineWidth', 1.2, 'MarkerSize', 6); hold on;
+    plot(dims, elapsed(:,3), '-^', 'LineWidth', 1.2, 'MarkerSize', 6);
+    plot(dims, elapsed(:,4), '-d', 'LineWidth', 1.2, 'MarkerSize', 6);
     
     % Add markers separately at sampled positions
-    plot(dims(marker_idx), elapsed(marker_idx,1), 'o', 'MarkerSize', 6, ...
-        'LineStyle', 'none', 'Color', [0 0.4470 0.7410]);
-    plot(dims(marker_idx), elapsed(marker_idx,3), '^', 'MarkerSize', 6, ...
-        'LineStyle', 'none', 'Color', [0.8500 0.3250 0.0980]);
-    plot(dims(marker_idx), elapsed(marker_idx,4), 'd', 'MarkerSize', 6, ...
-        'LineStyle', 'none', 'Color', [0.9290 0.6940 0.1250]);
+    % plot(dims(marker_idx), elapsed(marker_idx,1), 'o', 'MarkerSize', 6, ...
+    %     'LineStyle', 'none', 'Color', [0 0.4470 0.7410]);
+    % plot(dims(marker_idx), elapsed(marker_idx,3), '^', 'MarkerSize', 6, ...
+    %     'LineStyle', 'none', 'Color', [0.8500 0.3250 0.0980]);
+    % plot(dims(marker_idx), elapsed(marker_idx,4), 'd', 'MarkerSize', 6, ...
+    %     'LineStyle', 'none', 'Color', [0.9290 0.6940 0.1250]);
     
     grid on;
     xlabel('dimension n');
     ylabel('time (s)');
     title('Elapsed time for logarithm computations');
-    legend(labels_time, 'Interpreter', 'none', 'Location', 'northwest');
+    legend(labels_time, 'Interpreter', 'none', 'Location', 'best');
     
     % Similar for error plot
     eig_gaps = min(2 * min_angles(:), angle_gaps(:));
     
+    % fig_error = figure('Color', 'w', 'Units', 'inches', ...
+    %     'Position', [1 1 5 5], 'PaperUnits', 'inches', ...
+    %     'PaperPosition', [0 0 5 5], 'PaperSize', [5 5]);
+
     fig_error = figure('Color', 'w', 'Units', 'inches', ...
-        'Position', [1 1 5 5], 'PaperUnits', 'inches', ...
-        'PaperPosition', [0 0 5 5], 'PaperSize', [5 5]);
+    'Position', [1 1 5.0 3.4], ...
+    'PaperUnits', 'inches', ...
+    'PaperPosition', [0 0 5.0 3.4], ...
+    'PaperSize', [5.0 3.4]);
     
-    semilogy(dims, errors(:,1), '-', 'LineWidth', 1.2, 'Color', [0 0.4470 0.7410]); hold on;
-    semilogy(dims, errors(:,2), '-', 'LineWidth', 1.2, 'Color', [0.9290 0.6940 0.1250]);
+    plot(dims, errors(:,1), '-o', 'LineWidth', 1.2, 'MarkerSize', 6); hold on;
+    plot(dims, errors(:,2), '-^', 'LineWidth', 1.2, 'MarkerSize', 6);
     
     % Add markers at sampled positions
-    semilogy(dims(marker_idx), errors(marker_idx,1), 'o', 'MarkerSize', 6, ...
-        'LineStyle', 'none', 'Color', [0 0.4470 0.7410]);
-    semilogy(dims(marker_idx), errors(marker_idx,2), 's', 'MarkerSize', 6, ...
-        'LineStyle', 'none', 'Color', [0.9290 0.6940 0.1250]);
+    % semilogy(dims(marker_idx), errors(marker_idx,1), 'o', 'MarkerSize', 6, ...
+    %     'LineStyle', 'none', 'Color', [0 0.4470 0.7410]);
+    % semilogy(dims(marker_idx), errors(marker_idx,2), 's', 'MarkerSize', 6, ...
+    %     'LineStyle', 'none', 'Color', [0.9290 0.6940 0.1250]);
     
     ylabel('RMSE:  ||Q - expm(X)||_F/n');
     yscale('log')
     grid on;
     xlabel('dimension n');
     title('Reconstruction root mean square error');
-    legend(labels_error, 'Interpreter', 'none', 'Location', 'northwest');
+    legend(labels_error, 'Interpreter', 'none', 'Location', 'best');
     
     % ... rest of your code unchanged
 end
